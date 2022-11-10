@@ -26,5 +26,6 @@ export const banList = [
    "ecoautomod",
    "wieldyatol86717",
    "ctrlaltf44",
-   "blazerloop"
+   "blazerloop",
+   "KrownKingXD"
 ];
