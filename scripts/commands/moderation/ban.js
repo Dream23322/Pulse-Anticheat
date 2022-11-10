@@ -30,7 +30,7 @@ export function ban(message, args) {
         break;
     }
 
-    if(typeof member === "undefined") return player.tell("§r§6[§cPulse§6]§r Couldn't find that player!");
+    if(typeof member === "undefined") return player.tell(`§r§6[§cPulse§6]§r Couldn't find ${member}!`);
 
     // make sure they dont ban themselves
     if(member.nameTag === player.nameTag) return player.tell("§r§6[§cPulse§6]§r You cannot ban yourself.");
