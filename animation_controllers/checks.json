@@ -1,0 +1,124 @@
+{
+	"format_version": "1.10.0",
+	"animation_controllers": {
+		"controller.animation.autototem": {
+			"states": {
+				"autototem": {
+					"transitions": [{
+						"totem": "query.get_equipped_item_name('off_hand') == 'totem_of_undying'"
+					}]
+				},
+				"totem": {
+					"on_entry": [
+						"/scoreboard players add @s[tag=moving,tag=ground] autototemvl 1",
+						"/execute @s[tag=moving,tag=ground] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoTotem/A VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autototemvl\"}}]}",
+						"/scoreboard players add @s[tag=right] autototemvl 1",
+						"/execute @s[tag=right] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoTotem/B VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autototemvl\"}}]}",
+						"/scoreboard players add @s[tag=left] autototemvl 1",
+						"/execute @s[tag=left] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoTotem/C VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autototemvl\"}}]}"
+					],
+					"transitions": [{
+						"autototem": "query.get_equipped_item_name('off_hand') != 'totem_of_undying'"
+					}]
+				}
+			}
+		},
+		"controller.animation.autoshield": {
+			"states": {
+				"autoshield": {
+					"transitions": [{
+						"shield": "query.get_equipped_item_name('off_hand') == 'shield'"
+					}]
+				},
+				"shield": {
+					"on_entry": [
+						"/scoreboard players add @s[tag=moving,tag=ground] autoshield 1",
+						"/execute @s[tag=moving,tag=ground] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoShield/A VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autoshieldvl\"}}]}",
+						"/scoreboard players add @s[tag=right] autoshield 1",
+						"/execute @s[tag=right] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoShield/B VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autoshieldvl\"}}]}",
+						"/scoreboard players add @s[tag=left] autoshield 1",
+						"/execute @s[tag=left] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Combat) §4AutoShield/C VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"autoshieldvl\"}}]}"
+					],
+					"transitions": [{
+						"autoshield": "query.get_equipped_item_name('off_hand') != 'shield'"
+					}]
+				}
+			}
+		},
+		"controller.animation.invmove": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"invmove": "query.variant == 1"
+					}],
+					"on_entry": [
+						"/tag @s remove hasGUIopen",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aOpenChest§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"invmove": {
+					"transitions": [{
+						"default": "query.variant != 1"
+					}],
+					"on_entry": [
+						"/tag @s add hasGUIopen",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aOpenChest§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}"
+					]
+				}
+			}
+		},
+		"controller.animation.sprint": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"sprint": "query.is_sprinting"
+					}],
+					"on_entry": [
+						"/tag @s remove sprint",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aSPRINT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}"
+					]
+				},
+				"sprint": {
+					"transitions": [{
+						"default": "!query.is_sprinting"
+					}],
+					"on_entry": [
+						"/tag @s add sprint",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aSPRINT§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/execute @s[tag=right,scores={right=4..,invalidsprint=1..}] ~~~ function checks/alerts/invalidsprintB",
+						"/execute @s[tag=sneak,m=!c,tag=!flying,scores={invalidsprint=1..}] ~~~ function checks/alerts/invalidsprintC",
+						"/execute @s[tag=gliding,tag=!right,scores={invalidsprint=1..}] ~~~ function checks/alerts/invalidsprintD"
+					]
+				}
+			}
+		},
+		"controller.animation.noswing": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"noswing": "query.skin_id == 1"
+					}],
+					"on_entry": [
+						"/tag @s remove attack",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aATTACK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=stop)\"}]}",
+						"@s scythe:reset_skinid"
+					]
+				},
+				"noswing": {
+					"transitions": [{
+						"default": "query.skin_id != 1"
+					}],
+					"on_entry": [
+						"/tag @s add attack",
+						"/tellraw @a[tag=packetlogger] {\"rawtext\":[{\"text\":\"§߈§r§6[§cPulse§6]§r §bRecieved §aATTACK§r packet from: §g\"},{\"selector\":\"@s\"},{\"text\":\" §7(type=start)\"}]}",
+						"/scoreboard players add @s[tag=hasGUIopen] invmovevl 1",
+						"/execute @s[tag=hasGUIopen] ~~~ tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1has failed §7(Movement) §4InventoryMods/B §7(is_attacking)§4. VL= \"},{\"score\":{\"name\":\"@s\",\"objective\":\"invmovevl\"}}]}",
+						"/execute @s[tag=right,scores={right=3..}] ~~~ function checks/alerts/interactuse",
+						"/scoreboard players add @s last_attack 1",
+						"@s scythe:reset_skinid"
+					]
+				}
+			}
+		}
+	}
+}

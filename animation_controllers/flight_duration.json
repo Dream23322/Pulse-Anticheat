@@ -1,0 +1,19 @@
+{
+	"format_version": "1.10.0",
+	"animation_controllers": {
+		"controller.animation.flight_duration": {
+			"states": {
+				"default": {
+					"transitions": [{
+						"flight_duration": "query.variant == 1"
+					}]
+				},
+				"flight_duration": {
+					"on_entry": [
+                        "/kill @s"
+					]
+				}
+			}
+		}
+	}
+}
