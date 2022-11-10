@@ -1,0 +1,1 @@
+tellraw @s {"rawtext":[{"text":"§r§6[§cPulse§6]§r §cPulse is at 9.9"}]}

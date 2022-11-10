@@ -1,0 +1,41 @@
+{
+	"format_version": 2,
+	"header": {
+		"name": "Pulse 10.2",
+		"description": "Scaffold/E change",
+		"uuid": "c68ba1c1-b9e4-56ad-b7c8-98bbd28f1fa7",
+		"version": [2, 9, 0],
+		"min_engine_version": [1, 16, 210]
+	},
+	"metadata": {
+		"authors": ["MrDiamond64"],
+		"url": "https://github.com/MrDiamond64/Scythe-AntiCheat"
+	},
+	"modules": [{
+			"type": "data",
+			"uuid": "d059cc96-9272-4a33-90c8-f572bcc7fa56",
+			"version": [
+				1,
+				0,
+				0
+			]
+		},
+		{
+			"description": "Scythe AntiCheat Gametest Features",
+			"language": "javascript",
+			"type": "script",
+			"uuid": "ab31620b-f498-4355-9bea-498922f5940e",
+			"version": [0, 0, 1],
+			"entry": "scripts/main.js"
+		}
+	],
+	"dependencies": [{
+			"module_name": "@minecraft/server",
+			"version": "1.0.0-beta"
+		},
+        {
+			"module_name": "@minecraft/server-ui",
+			"version": "1.0.0-beta"
+		}
+	]
+}
