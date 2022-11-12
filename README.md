@@ -3,6 +3,10 @@
   <b>An anticheat for minecraft bedrock</b>
 </div>
 
+<div align="left">
+  <b> Info </b>
+ </div>
+
 # How to download and install
 1. If you want the default config, download the .mcpack file in the most recent release
 2. If you want to edit the config, download the .zip file, edit the config in ./scripts/data/config.js then change .zip to .mcpack
