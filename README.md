@@ -9,13 +9,20 @@
 
 # Some things Pulse-Anticheat can detect
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Movement Hacks 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scaffold Hacks 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Killaura 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Reach 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Crasher 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invalidsprint 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InvMove 
+ 1. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Movement Hacks 
+ 
+ 2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scaffold Hacks 
+ 
+ 3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Killaura 
+ 
+ 4. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Reach 
+
+ 5. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Crasher 
+ 
+ 6. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Invalidsprint 
+
+ 7. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InvMove 
+ 
 
 And More!
 
