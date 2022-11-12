@@ -9,13 +9,13 @@
 
 # Some things Pulse-Anticheat can detect
 
-Movement Hacks 
-Scaffold Hacks
-Killaura
-Reach
-Crasher
-Invalidsprint
-InvMove
+<b> Movement Hacks </b>
+<b> Scaffold Hacks </b>
+<b> Killaura </b>
+<b> Reach </b>
+<b> Crasher </b>
+<b> Invalidsprint </b>
+<b> InvMove </b>
 
 And More!
 
