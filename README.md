@@ -39,8 +39,10 @@ Bro just use /function tools/checkinfo in game to see the full list
 
 # Other
 Pulse-Anticheat Youtube:
+
 https://www.youtube.com/channel/UCyMn29iufaTHJC-lcdMXyKg
 
-This is based of Scythe anticheat so full credit to MrDiamond64
+This is based of Scythe anticheat so full credit to MrDiamond64:
+
 https://github.com/MrDiamond64/Scythe-AntiCheat
   
