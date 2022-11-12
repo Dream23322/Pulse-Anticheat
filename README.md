@@ -1,6 +1,6 @@
 <div align="center">
-  <font size="10"> Test </font>
-  <b>An anticheat for minecraft bedrock</b>
+  <b> Pulse-Anticheat </b>
+  <b> .An anticheat for minecraft bedrock</b>
 </div>
 
 # Info
