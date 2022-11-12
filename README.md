@@ -1,5 +1,5 @@
 <div align="center">
-  <b size=5> Pulse Anticheat </b>
+  <b><font size="+2"> Pulse Anticheat </b>
   <b>An anticheat for minecraft bedrock</b>
 </div>
 
