@@ -2,6 +2,7 @@ export default
 {
     "debug": true,
     "flagWhitelist": [],
+    "appeal": "Not Avalible",
     "customcommands": {
         "prefix": "!",
         "ban": {
