@@ -205,7 +205,7 @@ export function banMessage(player) {
         player.runCommand('execute @s~ ~ ~ particle minecraft:sonic_explosion ~ ~ ~')
         player.runCommand('execute @s~ ~ ~ particle minecraft:lava ~ ~ ~')
         player.runCommand('summon fireworks_rocket')
-        player.runCommand(`kick "${player.name}" §r\n§l§cYOU ARE §4BANNED!§r§a Appeal at: discord.gg/5snaYA9XrC \n§r§eBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
+        player.runCommand(`kick "${player.name}" §r\n§l§cYOU ARE §4BANNED!§r§a Appeal at: ${config.appeal} \n§r§eBanned By:§r ${by || "N/A"}\n§bReason:§r ${reason || "N/A"}\n§aBan Length:§r ${time || "Permenant"}`);
     } catch {
         player.triggerEvent("scythe:kick");
     }
