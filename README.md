@@ -1,5 +1,5 @@
 <div align="center">
-  <font size="1">This is really tiny text.</font>
+  <font size="10"> Test </font>
   <b>An anticheat for minecraft bedrock</b>
 </div>
 
