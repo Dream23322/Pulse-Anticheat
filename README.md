@@ -6,7 +6,10 @@
 # Info
 <div>
   Pulse-Anticheat is designed for minigame based servers like mineplex or the hive, it is currently in use on the PvP Land realm (sdjhvyKBqFA)
-  It has advanced checks able to detect any hack
+ 
+</div>
+<div>
+   It has advanced checks able to detect any hack
 </div>
 
 # How to download and install
