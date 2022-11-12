@@ -1,8 +1,9 @@
 <div align="center">
   <b> Pulse Anticheat </b>
   <b> An anticheat for minecraft bedrock</b>
+  <image src=https://user-images.githubusercontent.com/110651012/201456068-b35002c9-801b-4340-a6fb-d3bcd0b23a98.png border="0">
 </div>
-![Pulse](https://user-images.githubusercontent.com/110651012/201456068-b35002c9-801b-4340-a6fb-d3bcd0b23a98.png)
+
 
 
 # Info
