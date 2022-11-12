@@ -27,5 +27,8 @@ export const banList = [
    "wieldyatol86717",
    "ctrlaltf44",
    "blazerloop",
-   "KrownKingXD"
+   "KrownKingXD",
+   "FiveCheese66871",
+   "Null386",
+   "Flash4607"
 ];
