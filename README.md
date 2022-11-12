@@ -8,15 +8,15 @@
 2. If you want to edit the config, download the .zip file, edit the config in ./scripts/data/config.js then change .zip to .mcpack
 
 # Some things Pulse-Anticheat can detect
-
-<b> Movement Hacks </b>
-<b> Scaffold Hacks </b>
-<b> Killaura </b>
-<b> Reach </b>
-<b> Crasher </b>
-<b> Invalidsprint </b>
-<b> InvMove </b>
-
+<div>
+  <b> Movement Hacks </b>
+  <b> Scaffold Hacks </b>
+  <b> Killaura </b>
+  <b> Reach </b>
+  <b> Crasher </b>
+  <b> Invalidsprint </b>
+  <b> InvMove </b>
+</div>
 And More!
 
 Bro just use /function tools/checkinfo in game to see the full list
