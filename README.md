@@ -1,6 +1,6 @@
 <div align="center">
-  <b> Pulse-Anticheat </b>
-  <b> .An anticheat for minecraft bedrock</b>
+  # Pulse Anticheat
+  <b> An anticheat for minecraft bedrock</b>
 </div>
 
 # Info
