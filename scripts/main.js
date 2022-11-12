@@ -307,6 +307,10 @@ World.events.blockPlace.subscribe((blockPlace) => {
             blockPlace.cancle = true;
 
     }
+    //Scaffold/B (2) = checks for placing a block and attacking at the same time
+    if(config.modules.scaffoldB.enabled && player.hasTag("left") && player.hasTag("right")) {
+        flag(player, "Scaffold", "B", "Placement", false, false, false);
+    }
 
     //Scaffold/C = checks for placing a block and going very fast at the same time
     if(config.modules.scaffoldC.enabled && !player.hasTag("op")) {
