@@ -3,9 +3,11 @@
   <b>An anticheat for minecraft bedrock</b>
 </div>
 
-<div align="left">
-  <b> Info </b>
- </div>
+# Info
+<div>
+  Pulse-Anticheat is designed for minigame based servers like mineplex or the hive, it is currently in use on the PvP Land realm (sdjhvyKBqFA)
+  It has advanced checks able to detect any hack
+</div>
 
 # How to download and install
 1. If you want the default config, download the .mcpack file in the most recent release
