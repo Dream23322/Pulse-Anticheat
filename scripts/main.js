@@ -311,7 +311,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
     if(config.modules.scaffoldB.enabled && player.hasTag("left") && player.hasTag("right")) {
         flag(player, "Scaffold", "B", "Placement", false, false, false);
     }
-
+    
     //Scaffold/C = checks for placing a block and going very fast at the same time
     if(config.modules.scaffoldC.enabled && !player.hasTag("op")) {
         if(playerSpeed >= config.modules.scaffoldC.speed) {
@@ -328,15 +328,20 @@ World.events.blockPlace.subscribe((blockPlace) => {
             flag(player, "Scaffold", "D", "Placement", false, false, false);
             blockPlace.cancle = true;
     }
+    
     //Scaffold/E = Checks for large changed in rotation
-    if(player.blockPlace) {
+    if(blockPlace.player) {
         if(config.modules.scaffoldE.enabled && player.hasTag("left")) {
             if(diff >= config.modules.scaffoldE.maxRotationDiff)
                 flag(player, "Scaffold", "E", "Placement", false, false, false)
         }
     
     }
-    
+    //Scaffold/F
+    if(blockPlace.player && !player.hasTag("left")) {
+        if(!player.hasTag("left"))
+            flag(player, "Scaffold", "F", "Placement", false, false, false)
+    }
 
 
     
@@ -486,17 +491,21 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
             flag(player, "IllegalItems", "E", "Exploit", "item", item.typeId, undefined, undefined, player.selectedSlot);
             beforeItemUseOn.cancel = true;
         }
+    
     }
+
+
 });
 
 World.events.playerJoin.subscribe((playerJoin) => {
     const player = playerJoin.player;
 
     // declare all needed variables in player
-    player.badpackets5Ticks = 0;
-    player.firstAttack = Date.now();
-    player.cps = 0;
-    player.reports = [];
+    if(config.modules.badpackets5.enabled) player.badpackets5Ticks = 0;
+    if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
+    if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
+    if(config.modules.autoclickerA.enabled) player.cps = 0;
+    if(config.customcommands.report.enabled) player.reports = [];
 
     // fix a disabler method
     player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "");
@@ -724,7 +733,7 @@ World.events.entityHit.subscribe((entityHit) => {
 World.events.beforeItemUse.subscribe((beforeItemUse) => {
     const item = beforeItemUse.item;
     const player = beforeItemUse.source;
-
+    
     // GUI stuff
     if(config.customcommands.gui.enabled && item.typeId === "minecraft:wooden_axe" && item.nameTag === config.customcommands.gui.gui_item_name && player.hasTag("op")) {
         mainGui(player);
@@ -734,6 +743,25 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
     // patch a bypass for the freeze system
     if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
         beforeItemUse.cancel = true;
+
+    //fastuse/A = checks for throwing fast
+    if(config.modules.fastuseA.enabled === true) {
+        const lastThrowTime = Date.now() - player.lastThrow;
+        if(lastThrowTime < config.modules.fastuseA.use_delay) {
+            flag(player, "FastUse", "A", "Combat", "lastThrowTime", `${lastThrowTime}`);
+            beforeItemUse.cancel = true;
+        }
+        player.lastThrow = Date.now();
+    }
+    //Fastuse/B = Checks for fast eat hacks
+    if(config.modules.fastuseB.enabled) {
+        const eatTime = Date.now() - player.beforeItemUse
+        if(eatTime < config.modules.fastuseB.min_eat_delay) {
+            flag(player, "FastUse", "B", "EatTime", `${eatTime}`);
+            beforeItemUse.cancle = true;
+            if(config.debug === true) console.warn(`${new Date()} | ${player} ate in a time of ${eatTime}`);
+        }
+    }
 });
 
 Minecraft.system.events.beforeWatchdogTerminate.subscribe((beforeWatchdogTerminate) => {
@@ -749,9 +777,10 @@ checkPlayer();
 // when using /reload, the variables defined in playerJoin dont persist
 if([...World.getPlayers()].length >= 1) {
     for(const player of World.getPlayers()) {
-        player.badpackets5Ticks = 0;
-        player.firstAttack = Date.now();
-        player.cps = 0;
-        player.reports = [];
+        if(config.modules.badpackets5.enabled) player.badpackets5Ticks = 0;
+        if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
+        if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
+        if(config.modules.autoclickerA.enabled) player.cps = 0;
+        if(config.customcommands.report.enabled) player.reports = [];
     }
 }
