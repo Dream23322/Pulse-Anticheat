@@ -2,7 +2,7 @@ export default
 {
     "debug": true,
     "flagWhitelist": [],
-    "appeal": "Not Avalible",
+    "appeal": "discord.gg/5snaYA9XrC",
     "customcommands": {
         "prefix": "!",
         "ban": {
@@ -148,7 +148,7 @@ export default
         },
         "gui": {
             "enabled": true,
-            "gui_item_name": "§r§l§aRight click to Open the UI",
+            "gui_item_name": "§r§l§cRight click to Open the UI",
             "requiredTags": ["op"],
             "aliases": ["ui"]
         },
@@ -160,6 +160,22 @@ export default
         "version": {
             "enabled": true,
             "requiredTags": ["op"]
+        },
+        "antishulker": {
+            "enabled": true,
+            "requiredTags": ["op"]
+        },
+        "testaura": {
+            "enabled": true,
+            "requiredTags": ["modstatus"]
+        },
+        "checkinfo": {
+            "enabled": true,
+            "requiredTags": ["modstatus"]
+        },
+        "spawn": {
+            "enabled": true,
+            "requiredTags": []
         }
     },
     "modules": {
@@ -168,6 +184,7 @@ export default
             "entitiesBeforeRateLimit": 10
         },
         "filterUnicodeChat": false,
+        
         "badpackets2": {
             "enabled": true,
             "minLength": 1,
@@ -252,7 +269,7 @@ export default
         },        
         "noslowA": {
             "enabled": true,
-            "speed": 0.123,
+            "speed": 0.12,
             "maxSpeed": 0.16,
             "punishment": "ban",
             "punishmentLength": "21d",
@@ -363,7 +380,8 @@ export default
             "entities": 3,
             "punishment": "ban",
             "punishmentLength": "7d",
-            "minVlbeforePunishment": 1
+            "alsoKick": true,
+            "minVlbeforePunishment": 2
         },
         "illegalitemsF": {
             "enabled": true,
@@ -406,7 +424,7 @@ export default
         },
         "namespoofC": {
             "enabled": true,
-            "punishment": "none",
+            "punishment": "kick",
             "minVlbeforePunishment": 0
         },
         "illegalitemsH": {
@@ -468,7 +486,7 @@ export default
         },
         "scaffoldB": {
             "enabled": true,
-            "punishment": "none",
+            "punishment": "kick",
             "minVlbeforePunishment": 5,
         },
         "scaffoldA": {
@@ -492,6 +510,23 @@ export default
             "punishment": "none",
             "maxScaffoldDiff": 1,
             "minVlbeforePunishment": 10
+        },
+        "scaffoldF": {
+            "enabled": true,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
+        "fastuseA": {
+            "enabled": true,
+            "use_delay": 150,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
+        "fastuseB": {
+            "enabled": true,
+            "min_eat_delay": 1.61,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
         }
     },
     "itemLists": {
