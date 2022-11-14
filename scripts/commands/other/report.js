@@ -31,6 +31,8 @@ export function report(message, args) {
     // prevent report spam
     if(player.reports.includes(member.nameTag) === true) return player.tell("§r§6[§cPulse§6]§r You have already reported this player!");
     player.reports.push(member.nameTag);
+    if(member.hasTag("reported") 
+       player.tell("§r§6[§cPulse§6]§r This player has already been reported!")
 
     player.tell(`§r§6[§cPulse§6]§r You have reported ${member.nameTag} for: ${reason}.`);
     
