@@ -756,10 +756,11 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
     //Fastuse/B = Checks for fast eat hacks
     if(config.modules.fastuseB.enabled) {
         const eatTime = Date.now() - player.beforeItemUse
+	if(config.debug === true) console.warn(`${new Date()} | ${player} ate in a time of ${eatTime}`);
         if(eatTime < config.modules.fastuseB.min_eat_delay) {
             flag(player, "FastUse", "B", "EatTime", `${eatTime}`);
             beforeItemUse.cancle = true;
-            if(config.debug === true) console.warn(`${new Date()} | ${player} ate in a time of ${eatTime}`);
+            
         }
     }
 });
