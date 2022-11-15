@@ -527,7 +527,17 @@ export default
             "min_eat_delay": 1.61,
             "punishment": "none",
             "minVlbeforePunishment": 0
-        }
+        },
+        "killauraE": {
+            "enabled": true,
+            "punishment": "none",
+            "entities": [
+                "minecraft:arrow",
+                "minecraft:xp_bottle",
+                "minecraft:xp_orb"
+            ], 
+            "minVlbeforePunishment": 0
+        }        
     },
     "itemLists": {
         "spawnEggs": true,
