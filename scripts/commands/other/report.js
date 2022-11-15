@@ -32,7 +32,7 @@ export function report(message, args) {
     if(player.reports.includes(member.nameTag) === true) return player.tell("§r§6[§cPulse§6]§r You have already reported this player!");
     player.reports.push(member.nameTag);
     
-        if(member.hasTag("reported")) return player.tell(`§r§6[§cPulse§6]§r The player: ${member.nameTag} has already been reported!`);
+    if(member.hasTag("reported")) return player.tell(`§r§6[§cPulse§6]§r The player: ${member.nameTag} has already been reported!`);
 
 
     player.tell(`§r§6[§cPulse§6]§r You have reported ${member.nameTag} for: ${reason}.`);
