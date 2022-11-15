@@ -657,6 +657,11 @@ World.events.entityHit.subscribe((entityHit) => {
                 }
             }
         }
+        // Killaura/E = Checks for hitting invalid entities
+        if(config.modules.killauraE.enabled) {
+            if(player.entitiesHit.entities(config.modules.killauraE.entities))
+                flag(player, "Killaura", "E", "Combat", false, false, false)
+        }
 
         // reach/A = check if a player hits an entity more then 5.1 block away
         if(config.modules.reachA.enabled) {
