@@ -69,6 +69,10 @@ export const banList = [
    "ReekyStarling83",
    "SlmplyLogicPvP",
    "DribFR",
-   "PianoPandora948"
-
+   "PianoPandora948",
+   "TimelyTurnip351",
+   "Beast89900",
+   "igorrites26164",
+   "gingerfrog79175",
+   "Progamer"
 ];
