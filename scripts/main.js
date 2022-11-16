@@ -253,18 +253,19 @@ Minecraft.system.run(({ currentTick }) => {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
             // autoclicker/A = checks for high cps
             if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-
-            // player.runCommandAsync(`say ${player.cps}, ${player.lastCPS}. ${player.cps - player.lastCPS}`);
-
-            // autoclicker/B = checks if cps is similar to last cps (WIP)
-            /*
-            let cpsDiff = Math.abs(player.cps - player.lastCPS);
-            if(player.cps > 3 && cpsDiff > 0.81 && cpsDiff < 0.96) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
-            player.lastCPS = player.cps;
-            */
+  
 
             player.firstAttack = Date.now();
             player.cps = 0;
+        }
+        // Autoclicker/B = checks for similar CPS above 3
+        if(config.modules.autoclickerB.enabled) {
+            player.cps = player.cps / ((Date.now() - plauer.firstAttack) / 1000);
+            let cpsDiff = Math.abs(player.cps - player.lastCPS);
+            if(player.cps > 3 && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
+            player.lastCPS = player.cps;
+            player.firstAttack = Date.now()
+            player.cps = 0
         }
 
 		// BadPackets[4] = checks for invalid selected slot
