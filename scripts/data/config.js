@@ -537,7 +537,15 @@ export default
                 "minecraft:xp_orb"
             ], 
             "minVlbeforePunishment": 0
-        }        
+        }
+        "autoclickerB": {
+            "enabled": true,
+            "punishment": "ban",
+            "minCpsDiff": 0.81,
+            "maxCpsDiff": 0.96,
+            "punishmentLength": "21d",
+            "minVlbeforePunishment": 2
+        }
     },
     "itemLists": {
         "spawnEggs": true,
