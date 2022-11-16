@@ -71,7 +71,7 @@ function banMenuSelect(player, selection) {
     for (const plr of World.getPlayers()) {
         let playerName = `${plr.name}`;
         if(plr === player) playerName += " §1[YOU]";
-        if(plr.hasTag("op")) playerName += " §1[OP]";
+        if(plr.hasTag("op")) playerName += " §c[OP]";
         banMenuSelect.button(playerName, playerIcons[Math.floor(Math.random() * playerIcons.length)]);
     }
 
