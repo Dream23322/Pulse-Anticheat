@@ -63,5 +63,6 @@ export const banList = [
    "Jmichaelz",
    "zNull0",
    "TimelyTurnip351",
-   "Blue Shadow8558"
+   "Blue Shadow8558",
+   "ZacharyPlayzYT"
 ];
