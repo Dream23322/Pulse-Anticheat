@@ -2,7 +2,7 @@ export default
 {
     "debug": true,
     "flagWhitelist": [],
-    "appeal": "discord.gg/5snaYA9XrC",
+    "appeal": "",
     "customcommands": {
         "prefix": "!",
         "ban": {
