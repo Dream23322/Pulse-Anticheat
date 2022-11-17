@@ -260,7 +260,7 @@ Minecraft.system.run(({ currentTick }) => {
         }
         // Autoclicker/B = checks for similar CPS above 3
         if(config.modules.autoclickerB.enabled) {
-            player.cps = player.cps / ((Date.now() - plauer.firstAttack) / 1000);
+            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
             let cpsDiff = Math.abs(player.cps - player.lastCPS);
             if(player.cps > 3 && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
             player.lastCPS = player.cps;
