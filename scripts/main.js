@@ -343,7 +343,16 @@ World.events.blockPlace.subscribe((blockPlace) => {
         if(!player.hasTag("left"))
             flag(player, "Scaffold", "F", "Placement", false, false, false)
     }
-
+    // Reach/C = checks for placing blocks far away
+    if(config.modules.reachC.enabled) {
+        const distance = Math.sqrt(Math.pow(BlockLocation.x - player.location.x, 2) + Math.pow(BlockLocation.y - player.location.y, 2) + Math.pow(BlockLocation.z - player.location.z, 2));
+        if(distance > config.modules.reachC.reach) {
+            try {
+                player.runCommand("testfor @s[m=!c]")
+                flag(player, "Reach", "C", "Placement", `${distace}`, false, false)
+            } catch {}
+        }
+    }
 
     
 
