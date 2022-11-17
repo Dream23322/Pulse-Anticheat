@@ -658,6 +658,13 @@ World.events.entityHit.subscribe((entityHit) => {
                 }
             }
         }
+        // Killaura/D = Checks for large angle changes
+        if(config.modules.killauraD.enabled) {
+            const angleHitDiff = Math.abs(player.getYaw - player.get.lastYaw())
+            if(angleHitDiff > 90) {
+                flag(player, "Killaura", "D", "Combat", `AngleDifference=${angleHitDiff}`, false, false) 
+            }
+        }
         // Killaura/E = Checks for hitting invalid entities
         if(config.modules.killauraE.enabled) {
             if(config.modules.killauraE.entities(entity.typeId))
