@@ -468,7 +468,7 @@ export default
             "minVlbeforePunishment": 0
         },
         "movementB": {
-            "enabled": true,
+            "enabled": false,
             "punishment": "ban",
             "punishmentLength": "7d",
             "minVlbeforePunishment": 15
