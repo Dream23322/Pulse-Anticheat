@@ -671,7 +671,7 @@ World.events.entityHit.subscribe((entityHit) => {
                 flag(player, "Killaura", "E", "Combat", false, false, false)
         }
 
-        // reach/A = check if a player hits an entity more then 5.1 block away
+        // reach/A = check if a player hits an entity more then the set distance (in config)
         if(config.modules.reachA.enabled) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
@@ -686,12 +686,12 @@ World.events.entityHit.subscribe((entityHit) => {
             }
         }
 
-        if(config.modules.reachB.enabled) {
+        if(config.modules.reachB.enabled && player.hasTag("reported")) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
             if(config.debug === true) console.warn(`${player.name} attacked ${entityHitName} with a distance of ${distance}`);
 
-            if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("reported")) {
+            if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
                 // we ignore gmc players as they get increased reach
                 try {
                     player.runCommand("testfor @s[m=!c]");
