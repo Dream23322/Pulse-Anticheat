@@ -660,7 +660,7 @@ World.events.entityHit.subscribe((entityHit) => {
         }
         // Killaura/E = Checks for hitting invalid entities
         if(config.modules.killauraE.enabled) {
-            if(player.entitiesHit.entities(config.modules.killauraE.entities))
+            if(config.modules.killauraE.entities(entity.typeId))
                 flag(player, "Killaura", "E", "Combat", false, false, false)
         }
 
