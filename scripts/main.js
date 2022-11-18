@@ -446,6 +446,16 @@ World.events.blockBreak.subscribe((blockBreak) => {
             flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlot},lastSelectedSlot=${player.lastSelectedSlot}`);
         }
     }
+    //Reach/D = Checks for breaking blocks far away
+    if(config.modules.reachD.enabled) {
+        const distance = Math.sqrt(Math.pow(BlockLocation.x - player.location.x, 2) + Math.pow(BlockLocation.y - player.location.y, 2) + Math.pow(BlockLocation.z - player.location.z, 2));
+        if(distance > config.modules.reachD.reach)
+            try{
+                player.runCommand("testfor @s[m=!c]");
+                flag(player, "Reach", "D", "Misc", `${distance}`, false, false)
+            } catch {}
+
+    }
 });
 
 World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
