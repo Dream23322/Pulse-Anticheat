@@ -537,7 +537,7 @@ export default
                 "minecraft:xp_orb"
             ], 
             "minVlbeforePunishment": 0
-        }
+        },
         "autoclickerB": {
             "enabled": true,
             "punishment": "ban",
@@ -545,7 +545,20 @@ export default
             "maxCpsDiff": 0.96,
             "punishmentLength": "21d",
             "minVlbeforePunishment": 2
+        },
+        "reachC": {
+            "enabled": true,
+            "reach": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
+        },
+        "reachD": {
+            "enabled": true,
+            "reach": 6,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         }
+    
     },
     "itemLists": {
         "spawnEggs": true,
