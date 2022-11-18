@@ -246,8 +246,7 @@ Minecraft.system.run(({ currentTick }) => {
 		
         // Speed/A = Checks for high speed
         if(config.modules.speedA.enabled) {
-
-            if(Math.abs(player.speed).toFixed(2) > config.modules.speedA.speed) 
+            if(Math.abs(player.speed).toFixed(2) > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed)) 
                 flag(player, "Speed", "A", "Movement", `${playerSpeed}`, false, false)
         }
                
