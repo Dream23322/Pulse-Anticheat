@@ -44,20 +44,22 @@ Bro just use /function tools/checkinfo in game to see the full list
 <div align="center">
   <b> We Are Looking For Developers!</b>
 </div>
-<div>
+<div align="center">
   <b> About: </b>
 </div>
-<div>
+<div align="center">
   You must have some javascript knowlage
   <div>
     You will NOT be paid
   </div>
 </div>
-Pulse-Anticheat Youtube:
 
-https://www.youtube.com/channel/UCyMn29iufaTHJC-lcdMXyKg
+<div>
+  Pulse-Anticheat Youtube:
 
-This is based of Scythe anticheat so full credit to MrDiamond64:
+  https://www.youtube.com/channel/UCyMn29iufaTHJC-lcdMXyKg
 
-https://github.com/MrDiamond64/Scythe-AntiCheat
-  
+  This is based of Scythe anticheat so full credit to MrDiamond64:
+
+  https://github.com/MrDiamond64/Scythe-AntiCheat
+ </div>
