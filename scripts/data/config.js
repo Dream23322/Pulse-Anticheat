@@ -557,6 +557,12 @@ export default
             "reach": 6,
             "punishment": "kick",
             "minVlbeforePunishment": 5
+        },
+        "speedA": {
+            "enabled": true,
+            "speed": 0.125,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         }
     
     },
