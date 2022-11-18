@@ -41,6 +41,18 @@ And More!
 Bro just use /function tools/checkinfo in game to see the full list
 
 # Other
+<div align="center">
+  <b> We Are Looking For Developers!</b>
+</div>
+<div>
+  <b> About: </b>
+</div>
+<div>
+  You must have some javascript knowlage
+  <div>
+    You will NOT be paid
+  </div>
+</div>
 Pulse-Anticheat Youtube:
 
 https://www.youtube.com/channel/UCyMn29iufaTHJC-lcdMXyKg
