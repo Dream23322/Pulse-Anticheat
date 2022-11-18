@@ -243,30 +243,44 @@ Minecraft.system.run(({ currentTick }) => {
             if(isNotInAir === false) flag(player, "Movement", "A", "Movement", "vertical_speed", Math.abs(player.velocity.y).toFixed(4), true);
                 else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with flyA motion but was found near solid blocks.`);
         }
+        // Movement/C = Checks for the weird TP like speed movement
+        if(config.modules.movementC.enabled) {
+            const position1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+            if(player.velocity.x == 0 || player.velocity.y == 0) {
+                const position2 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+                const distance = Math.abs(position1 - position2);
+                if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
+                    flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false)
+            }
+        }   
+            
+        // Speed/A = Checks for unaturall speed
+        if(config.modules.speedA.enabled) {
+            if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
+                flag(player, "Speed", "A", "Movement", `speed=${playerSpeed}`, false, false)
+        }
         
         // speed/b = strafe speed (This was a fuck hell to stop false flags)
         if(config.modules.strafeB.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag('noMovement') && playerSpeed.toFixed(2) >= 0.127)
             flag(player, "Strafe", "B", "Movement", false, false, false)
         
-
+        // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            // autoclicker/A = checks for high cps
             if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
 
             // player.runCommandAsync(`say ${player.cps}, ${player.lastCPS}. ${player.cps - player.lastCPS}`);
 
-            // autoclicker/B = checks if cps is similar to last cps (WIP)
-            /*
-            let cpsDiff = Math.abs(player.cps - player.lastCPS);
-            if(player.cps > 3 && cpsDiff > 0.81 && cpsDiff < 0.96) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
-            player.lastCPS = player.cps;
-            */
-
             player.firstAttack = Date.now();
             player.cps = 0;
         }
-
+        // Autoclicker/B = checks for similar cps
+        if(config.modules.autoclickerB.enabled) {
+            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+            let cpsDiff = Math.abs(player.cps - player.lastCPS);
+            if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
+            player.lastCPS = player.cps;
+        }
 		// BadPackets[4] = checks for invalid selected slot
         if(config.modules.badpackets4.enabled && player.selectedSlot < 0 || player.selectedSlot > 8) {
             flag(player, "BadPackets", "4", "Exploit", "selectedSlot", `${player.selectedSlot}`);
@@ -739,17 +753,55 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
         mainGui(player);
         beforeItemUse.cancel = true;
     }
-
-    // patch a bypass for the freeze system
-    if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
-        beforeItemUse.cancel = true;
+    // Fastuse/A = Checks for horion fast throw
     if(config.modules.fastuseA.enabled === true) {
         const lastThrowTime = Date.now() - player.lastThrow;
+        if(lastThrowTime < 184) console.warn("detected fastthrow4", lastThrowTime);
         if(lastThrowTime < config.modules.fastuseA.use_delay) {
-            flag(player, "FastUse", "A", "Combat", "lastThrowTime", `${lastThrowTime}`);
+            flag(player, "FastUse", "A", "Combat", "lastThrowTime", lastThrowTime);
             beforeItemUse.cancel = true;
         }
         player.lastThrow = Date.now();
+    }
+    // patch a bypass for the freeze system
+    if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
+        beforeItemUse.cancel = true;
+
+    if(config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled) {
+        const itemEnchants = item.getComponent("enchantments").enchantments;
+        let itemType = Minecraft.ItemTypes.get(item.typeId);
+        if(typeof itemType === "undefined") itemType = Minecraft.ItemTypes.get("minecraft:book");
+
+        const item2 = new Minecraft.ItemStack(itemType, 1, item.data);
+        const item2Enchants = item2.getComponent("enchantments").enchantments;
+
+        for (const enchantment in Minecraft.MinecraftEnchantmentTypes) {
+            const enchantData = itemEnchants.getEnchantment(Minecraft.MinecraftEnchantmentTypes[enchantment]);
+
+            if(typeof enchantData === "object") {
+                if(config.modules.badenchantsA.enabled === true) {
+                    const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
+                    if(typeof maxLevel === "number") {
+                        if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, beforeItemUse, player.selectedSlot);
+                    } else if(enchantData.level > Minecraft.MinecraftEnchantmentTypes[enchantment].maxLevel)
+                        flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, beforeItemUse, player.selectedSlot);
+                }
+
+                if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
+                    flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, beforeItemUse, player.selectedSlot);
+
+                if(config.modules.badenchantsC.enabled) {
+                    if(!item2.getComponent("enchantments").enchantments.canAddEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantment], 1))) {
+                        flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, beforeItemUse, player.selectedSlot);
+                    }
+
+                    if(config.modules.badenchantsB.multi_protection === true) {
+                        item2Enchants.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1));
+                        item2.getComponent("enchantments").enchantments = item2Enchants;
+                    }
+                }
+            }
+        }
     }
 });
 
