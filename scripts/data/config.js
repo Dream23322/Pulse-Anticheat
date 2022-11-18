@@ -217,6 +217,11 @@ export default
             "punishment": "mute",
             "minVlbeforePunishment": 5
         },
+        "spammerE": {
+            "enabled": true,
+            "punsihemnt": "mute",
+            "minVlbeforePunishment": 5
+        },
         "crasherA": {
             "enabled": true,
             "punishment": "ban",
