@@ -2,7 +2,7 @@ export default
 {
     "debug": true,
     "flagWhitelist": [],
-    "appeal": "",
+    "appeal": "Unknown",
     "customcommands": {
         "prefix": "!",
         "ban": {
