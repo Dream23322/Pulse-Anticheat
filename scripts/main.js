@@ -16,7 +16,10 @@ World.events.beforeChat.subscribe(msg => {
 
     if(config.debug === true && message === "ping") console.warn(`${new Date()} | Pong!`);
 
-    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true;
+    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
+        msg.cancel = true;
+        flag(player, "Spammer", "E", "Advertisement", `message=${msg}`,false, false)
+    }
 
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
