@@ -168,9 +168,12 @@ Minecraft.system.run(({ currentTick }) => {
 		
             // AntiShulker/A = Checks for shulkers
             if(config.modules.antishulkerA.enabled) {
-                if(config.modules.antishulkerA.normalShulkers.includes(item.typeId) || config.modules.antishulkerA.antiBypass === true && config.itemLists.antiBypassItems.includes(item.typeId)) {
-                    flag(player, "AntiShulker", "A", "Exploit", `Item=${item.typeId}`, false, false);
-                    player.runCommandAsync("clear @s");
+                if(config.modules.antishulkerA.normalShulkers.includes(item.typeId) && !player.hasTag("op") || config.modules.antishulkerA.antiBypass === true && config.itemLists.antiBypassItems.includes(item.typeId) && !player.hasTag("op")) {
+                    try {
+                        player.runCommand("testfor @s[m=!c]")
+                        flag(player, "AntiShulker", "A", "Exploit", `Item=${item.typeId}`, false, false);
+                        player.runCommandAsync("clear @s");
+                    } catch {}
                 }
             }
             // BadEnchants/D = checks if an item has a lore
