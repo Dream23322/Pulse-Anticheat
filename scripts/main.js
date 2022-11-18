@@ -165,7 +165,14 @@ Minecraft.system.run(({ currentTick }) => {
             // Illegalitems/F = Checks if an item has a name longer then 32 characters
             if(config.modules.illegalitemsF.enabled && item.nameTag?.length > config.modules.illegalitemsF.length)
                 flag(player, "IllegalItems", "F", "Exploit", "name", `${item.nameTag},length=${item.nameTag.length}`, undefined, undefined, i);
-
+		
+            // AntiShulker/A = Checks for shulkers
+            if(config.modules.antishulkerA.enabled) {
+                if(config.modules.antishulkerA.normalShulkers.includes(item.typeId) || config.modules.antishulkerA.antiBypass === true && config.itemLists.antiBypassItems.includes(item.typeId)) {
+                    flag(player, "AntiShulker", "A", "Exploit", `Item=${item.typeId}`, false, false);
+                    player.runCommandAsync("clear @s");
+                }
+            }
             // BadEnchants/D = checks if an item has a lore
             if(config.modules.badenchantsD.enabled && item.getLore().length) {
                 if(!config.modules.badenchantsD.exclusions.includes(String(item.getLore())))
