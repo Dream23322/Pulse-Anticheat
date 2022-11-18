@@ -243,7 +243,14 @@ Minecraft.system.run(({ currentTick }) => {
             if(isNotInAir === false) flag(player, "Movement", "A", "Movement", "vertical_speed", Math.abs(player.velocity.y).toFixed(4), true);
                 else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with flyA motion but was found near solid blocks.`);
         }
-        
+		
+        // Speed/A = Checks for high speed
+        if(config.modules.speedA.enabled) {
+
+            if(Math.abs(player.speed).toFixed(2) > config.modules.speedA.speed) 
+                flag(player, "Speed", "A", "Movement", `${playerSpeed}`, false, false)
+        }
+               
         // speed/b = strafe speed (This was a fuck hell to stop false flags)
         if(config.modules.strafeB.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag('noMovement') && playerSpeed.toFixed(2) >= 0.127)
             flag(player, "Strafe", "B", "Movement", false, false, false)
