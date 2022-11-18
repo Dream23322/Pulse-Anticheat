@@ -16,10 +16,7 @@ World.events.beforeChat.subscribe(msg => {
 
     if(config.debug === true && message === "ping") console.warn(`${new Date()} | Pong!`);
 
-    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
-        msg.cancel = true;
-        flag(player, "Spammer", "E", "Advertisement", `message=${msg}`,false, false)
-    }
+    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true;
 
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
@@ -246,13 +243,7 @@ Minecraft.system.run(({ currentTick }) => {
             if(isNotInAir === false) flag(player, "Movement", "A", "Movement", "vertical_speed", Math.abs(player.velocity.y).toFixed(4), true);
                 else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with flyA motion but was found near solid blocks.`);
         }
-		
-        // Speed/A = Checks for high speed
-        if(config.modules.speedA.enabled) {
-            if(Math.abs(player.speed).toFixed(2) > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed)) 
-                flag(player, "Speed", "A", "Movement", `${playerSpeed}`, false, false)
-        }
-               
+        
         // speed/b = strafe speed (This was a fuck hell to stop false flags)
         if(config.modules.strafeB.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag('noMovement') && playerSpeed.toFixed(2) >= 0.127)
             flag(player, "Strafe", "B", "Movement", false, false, false)
@@ -262,19 +253,18 @@ Minecraft.system.run(({ currentTick }) => {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
             // autoclicker/A = checks for high cps
             if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-  
+
+            // player.runCommandAsync(`say ${player.cps}, ${player.lastCPS}. ${player.cps - player.lastCPS}`);
+
+            // autoclicker/B = checks if cps is similar to last cps (WIP)
+            /*
+            let cpsDiff = Math.abs(player.cps - player.lastCPS);
+            if(player.cps > 3 && cpsDiff > 0.81 && cpsDiff < 0.96) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
+            player.lastCPS = player.cps;
+            */
 
             player.firstAttack = Date.now();
             player.cps = 0;
-        }
-        // Autoclicker/B = checks for similar CPS above 3
-        if(config.modules.autoclickerB.enabled) {
-            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            let cpsDiff = Math.abs(player.cps - player.lastCPS);
-            if(player.cps > 3 && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
-            player.lastCPS = player.cps;
-            player.firstAttack = Date.now()
-            player.cps = 0
         }
 
 		// BadPackets[4] = checks for invalid selected slot
@@ -352,18 +342,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
         if(!player.hasTag("left"))
             flag(player, "Scaffold", "F", "Placement", false, false, false)
     }
-    // Reach/C = checks for placing blocks far away
-    if(config.modules.reachC.enabled) {
-        const distance = Math.sqrt(Math.pow(BlockLocation.x - player.location.x, 2) + Math.pow(BlockLocation.y - player.location.y, 2) + Math.pow(BlockLocation.z - player.location.z, 2));
-        if(distance > config.modules.reachC.reach) {
-            try {
-                player.runCommand("testfor @s[m=!c]")
-                flag(player, "Reach", "C", "Placement", `${distace}`, false, false)
-            } catch {
-                console.warn(`${new Date()} | ${player} was suspected to be using Reach/C but is in gamemode 1!`);
-            }
-        }
-    }
+
 
     
 
@@ -456,18 +435,6 @@ World.events.blockBreak.subscribe((blockBreak) => {
         if(player.flagAutotoolA === true) {
             flag(player, "AutoTool", "A", "Misc", "selectedSlot", `${player.selectedSlot},lastSelectedSlot=${player.lastSelectedSlot}`);
         }
-    }
-    //Reach/D = Checks for breaking blocks far away
-    if(config.modules.reachD.enabled) {
-        const distance = Math.sqrt(Math.pow(BlockLocation.x - player.location.x, 2) + Math.pow(BlockLocation.y - player.location.y, 2) + Math.pow(BlockLocation.z - player.location.z, 2));
-        if(distance > config.modules.reachD.reach)
-            try{
-                player.runCommand("testfor @s[m=!c]");
-                flag(player, "Reach", "D", "Misc", `${distance}`, false, false)
-            } catch {
-                console.warn(`${new Date()} | ${player} was suspected to be using Reach/D but is in gamemode 1!`);
-            }
-
     }
 });
 
@@ -690,20 +657,8 @@ World.events.entityHit.subscribe((entityHit) => {
                 }
             }
         }
-        // Killaura/D = Checks for large angle changes
-        if(config.modules.killauraD.enabled) {
-            const angleHitDiff = Math.abs(player.getYaw - player.get.lastYaw())
-            if(angleHitDiff > 90) {
-                flag(player, "Killaura", "D", "Combat", `AngleDifference=${angleHitDiff}`, false, false) 
-            }
-        }
-        // Killaura/E = Checks for hitting invalid entities
-        if(config.modules.killauraE.enabled) {
-            if(config.modules.killauraE.entities(entity.typeId))
-                flag(player, "Killaura", "E", "Combat", false, false, false)
-        }
 
-        // reach/A = check if a player hits an entity more then the set distance (in config)
+        // reach/A = check if a player hits an entity more then 5.1 block away
         if(config.modules.reachA.enabled) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
@@ -714,25 +669,21 @@ World.events.entityHit.subscribe((entityHit) => {
                 try {
                     player.runCommand("testfor @s[m=!c]");
                     flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`);
-                } catch {
-                    console.warn(`${new Date()} | ${player} was suspected to be using Reach/A but is in gamemode 1!`);
-                }
+                } catch {}
             }
         }
 
-        if(config.modules.reachB.enabled && player.hasTag("reported")) {
+        if(config.modules.reachB.enabled) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
             if(config.debug === true) console.warn(`${player.name} attacked ${entityHitName} with a distance of ${distance}`);
 
-            if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
+            if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("reported")) {
                 // we ignore gmc players as they get increased reach
                 try {
                     player.runCommand("testfor @s[m=!c]");
                     flag(player, "Reach", "B", "Combat", "entity", `${entity.typeId},distance=${distance}`);
-                } catch {
-                    console.warn(`${new Date()} | ${player} was suspected to be using Reach/B but is in gamemode 1!`);
-                }
+                } catch {}
             }
         }
 
@@ -782,7 +733,7 @@ World.events.entityHit.subscribe((entityHit) => {
 World.events.beforeItemUse.subscribe((beforeItemUse) => {
     const item = beforeItemUse.item;
     const player = beforeItemUse.source;
-    
+
     // GUI stuff
     if(config.customcommands.gui.enabled && item.typeId === "minecraft:wooden_axe" && item.nameTag === config.customcommands.gui.gui_item_name && player.hasTag("op")) {
         mainGui(player);
@@ -792,8 +743,6 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
     // patch a bypass for the freeze system
     if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
         beforeItemUse.cancel = true;
-
-    //fastuse/A = checks for throwing fast
     if(config.modules.fastuseA.enabled === true) {
         const lastThrowTime = Date.now() - player.lastThrow;
         if(lastThrowTime < config.modules.fastuseA.use_delay) {
@@ -801,16 +750,6 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
             beforeItemUse.cancel = true;
         }
         player.lastThrow = Date.now();
-    }
-    //Fastuse/B = Checks for fast eat hacks
-    if(config.modules.fastuseB.enabled) {
-        const eatTime = Date.now() - player.beforeItemUse
-	if(config.debug === true) console.warn(`${new Date()} | ${player} ate in a time of ${eatTime}`);
-        if(eatTime < config.modules.fastuseB.min_eat_delay) {
-            flag(player, "FastUse", "B", "EatTime", `${eatTime}`);
-            beforeItemUse.cancle = true;
-            
-        }
     }
 });
 
