@@ -356,7 +356,9 @@ World.events.blockPlace.subscribe((blockPlace) => {
             try {
                 player.runCommand("testfor @s[m=!c]")
                 flag(player, "Reach", "C", "Placement", `${distace}`, false, false)
-            } catch {}
+            } catch {
+                console.warn(`${new Date()} | ${player} was suspected to be using Reach/C but is in gamemode 1!`);
+            }
         }
     }
 
@@ -459,7 +461,9 @@ World.events.blockBreak.subscribe((blockBreak) => {
             try{
                 player.runCommand("testfor @s[m=!c]");
                 flag(player, "Reach", "D", "Misc", `${distance}`, false, false)
-            } catch {}
+            } catch {
+                console.warn(`${new Date()} | ${player} was suspected to be using Reach/D but is in gamemode 1!`);
+            }
 
     }
 });
@@ -707,7 +711,9 @@ World.events.entityHit.subscribe((entityHit) => {
                 try {
                     player.runCommand("testfor @s[m=!c]");
                     flag(player, "Reach", "A", "Combat", "entity", `${entity.typeId},distance=${distance}`);
-                } catch {}
+                } catch {
+                    console.warn(`${new Date()} | ${player} was suspected to be using Reach/A but is in gamemode 1!`);
+                }
             }
         }
 
@@ -721,7 +727,9 @@ World.events.entityHit.subscribe((entityHit) => {
                 try {
                     player.runCommand("testfor @s[m=!c]");
                     flag(player, "Reach", "B", "Combat", "entity", `${entity.typeId},distance=${distance}`);
-                } catch {}
+                } catch {
+                    console.warn(`${new Date()} | ${player} was suspected to be using Reach/B but is in gamemode 1!`);
+                }
             }
         }
 
