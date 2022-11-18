@@ -58,10 +58,9 @@ export function flag(player, check, checkType, hackType, debugName, debug, shoul
     if(check !== "CommandBlockExploit") player.runCommandAsync(`scoreboard players add @s ${check.toLowerCase()}vl 1`);
         else player.runCommandAsync("scoreboard players add @s cbevl 1");
 
-    if(debug && check !== "CommandBlockExploit") player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b§[${hackType}] §c${check}/§g${checkType.toUpperCase()} §7(${debugName}=${debug}§r§7)§9. VL= "},{"score":{"name":"@s","objective":"${check.toLowerCase()}vl"}}]}`);
-        else if(debugName && debug) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b[${hackType}] §c${check}/§g${checkType.toUpperCase()} §7(${debugName}=${debug}§r§7)§9. VL= "},{"score":{"name":"@s","objective":"cbevl"}}]}`);
-        else player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b[${hackType}] §c${check}/§g${checkType.toUpperCase()}.§9 VL= "},{"score":{"name":"@s","objective":"${check.toLowerCase()}vl"}}]}`);
-
+    if(debug && check !== "CommandBlockExploit") player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b§[${hackType}] §c${check}/§g${checkType.toUpperCase()} §7(${debugName}=${debug}§r§7)§9. VL⇝ "},{"score":{"name":"@s","objective":"${check.toLowerCase()}vl"}}]}`);
+        else if(debugName && debug) player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b[${hackType}] §c${check}/§g${checkType.toUpperCase()} §7(${debugName}=${debug}§r§7)§9. VL⇝ "},{"score":{"name":"@s","objective":"cbevl"}}]}`);
+        else player.runCommandAsync(`tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":" §6has failed §b[${hackType}] §c${check}/§g${checkType.toUpperCase()}.§9 VL⇝ "},{"score":{"name":"@s","objective":"${check.toLowerCase()}vl"}}]}`);
     if(typeof slot === "number") {
 		const container = player.getComponent("inventory").container;
 		try {
