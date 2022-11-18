@@ -575,7 +575,7 @@ export default
             Having antibypass on will not allow peole without op to have chests or barrels, only use this if you have a 
             Kit-PvP like server.
             */
-            "antiBypass": true,
+            "antiBypass": false,
             "normalShulkers": "minecraft:shulker__box",
             "punishment": "ban",
             "punishmentLength": "12h",
