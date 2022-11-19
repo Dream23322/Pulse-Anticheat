@@ -594,6 +594,17 @@ export default
             Having this on will stop people being able to use flint and steel, only use on kitpvp servers or servers that won't let you defaulty access flint and steel
             */
             "item": "minecraft:flint_and_steel"
+        },
+        "antigriefB": {
+            "enabled": true,
+            "exculsions": [
+                /*
+                if you have any explosives being used on your realm/server add them in the exculsions list
+                do it like this:
+                "minecraft:tnt"
+                */
+               "minecraft:end_crystal"
+            ]
         }
     },
     "itemLists": {
@@ -612,6 +623,11 @@ export default
             "minecraft:tadpole_bucket",
             "minecraft:dispenser"
         ],
+        "antiGriefItems": [
+            "minecraft:tnt",
+            "minecraft:end_crystal",
+            "minecraft:respawn_anchor"
+        ],            
         "antiBypassItems": [
             "minecraft:barrel",
             "minecraft:chest",
