@@ -581,7 +581,13 @@ export default
             "punishmentLength": "12h",
             "minVlbeforePunishment": 5
 
-        }    
+        },
+        "antikbA" : {
+            "enabled": true,
+            "punishment": "kick",
+            "magnitude": -0.078,
+            "minVlbeforePunishment": 10
+        } 
     },
     "itemLists": {
         "spawnEggs": true,
