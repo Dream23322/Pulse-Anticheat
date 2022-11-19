@@ -165,7 +165,7 @@ Minecraft.system.run(({ currentTick }) => {
             // Illegalitems/F = Checks if an item has a name longer then 32 characters
             if(config.modules.illegalitemsF.enabled && item.nameTag?.length > config.modules.illegalitemsF.length)
                 flag(player, "IllegalItems", "F", "Exploit", "name", `${item.nameTag},length=${item.nameTag.length}`, undefined, undefined, i);
-		
+
             // AntiShulker/A = Checks for shulkers
             if(config.modules.antishulkerA.enabled) {
                 if(config.modules.antishulkerA.normalShulkers.includes(item.typeId) && !player.hasTag("op") || config.modules.antishulkerA.antiBypass === true && config.itemLists.antiBypassItems.includes(item.typeId) && !player.hasTag("op")) {
@@ -274,7 +274,8 @@ Minecraft.system.run(({ currentTick }) => {
                 } 
                     
             }  
-        }            
+        }
+
         // Speed/A = Checks for unaturall speed
         if(config.modules.speedA.enabled) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
@@ -339,7 +340,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
     if(config.modules.scaffoldB.enabled && player.hasTag("left")) {
         if(blockPlace.player)
             flag(player, "Scaffold", "B", "Placement", false, false, false);
-            blockPlace.cancle = true;
+            blockPlace.cancel = true;
 
     }
     //Scaffold/B (2) = checks for placing a block and attacking at the same time
@@ -353,7 +354,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
             try{
                 player.runCommand("testfor @s[m=!c]");
                 flag(player, "Scaffold", "C", "Placement", `speed=${playerSpeed}`, false, false);
-                blockPlace.cancle = true;
+                blockPlace.cancel = true;
             } catch {}
         }
     }
@@ -361,7 +362,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
     if(config.modules.scaffoldD.enabled) {
         if(player.hasTag("right") && blockPlace.player)
             flag(player, "Scaffold", "D", "Placement", false, false, false);
-            blockPlace.cancle = true;
+            blockPlace.cancel = true;
     }
     
     //Scaffold/E = Checks for large changed in rotation
@@ -486,6 +487,13 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     if(config.modules.antigriefA.enabled) {
         if(config.modules.antigriefA.item.includes(item.typeId)) {
             flag(player, "AntiGrief", "A", "Misc", false, false, false);
+            beforeItemUseOn.cancel = true;
+        }
+    }
+    // Anti-Grief/B = stops people using explosives of any kind
+    if(config.modules.antigriefB.enabled) {
+        if(config.itemLists.antiGriedItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
+            flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
             beforeItemUseOn.cancel = true;
         }
     }
