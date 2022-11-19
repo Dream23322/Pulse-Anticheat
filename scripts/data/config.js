@@ -587,7 +587,14 @@ export default
             "punishment": "kick",
             "magnitude": -0.078,
             "minVlbeforePunishment": 10
-        } 
+        },
+        "antigriefA": {
+            "enabled": false,
+            /*
+            Having this on will stop people being able to use flint and steel, only use on kitpvp servers or servers that won't let you defaulty access flint and steel
+            */
+            "item": "minecraft:flint_and_steel"
+        }
     },
     "itemLists": {
         "spawnEggs": true,
