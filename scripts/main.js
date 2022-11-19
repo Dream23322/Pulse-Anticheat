@@ -263,7 +263,18 @@ Minecraft.system.run(({ currentTick }) => {
                     flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false)
             }
         }   
-            
+        // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
+        if(config.modules.antikbA.enabled) {
+            if(Number((player.velocity.y + player.velocity.x + player.velocity.z).toFixed(3)) <= config.modules.antikbA.magnitude) {
+                if(player.hasTag("attacked") && !player.hasTag("dead") && !player.hasTag("gliding") && !player.hasTag("levitating") && !player.hasTag("flying")) {
+                    try {
+                        player.runCommand("testfor @s[m=!c]")
+                        flag(player, "AntiKB", "A", "Combat", `Velocity=${player.velocity}`, false, false)
+                    } catch {}
+                } 
+                    
+            }  
+        }            
         // Speed/A = Checks for unaturall speed
         if(config.modules.speedA.enabled) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
