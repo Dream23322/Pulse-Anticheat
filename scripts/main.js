@@ -492,7 +492,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     }
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
-        if(config.itemLists.antiGriedItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
+        if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
             flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
             beforeItemUseOn.cancel = true;
         }
