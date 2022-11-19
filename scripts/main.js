@@ -482,7 +482,13 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
         flag(player, "CommandBlockExploit","F", "Exploit", "block", item.typeId, undefined, undefined, player.selectedSlot);
         beforeItemUseOn.cancel = true;
     }
-
+    // Anti-Grief/A = stops the use of flint and steel
+    if(config.modules.antigriefA.enabled) {
+        if(config.modules.antigriefA.item.includes(item.typeId)) {
+            flag(player, "AntiGrief", "A", "Misc", false, false, false);
+            beforeItemUseOn.cancel = true;
+        }
+    }
     /*
         illegalitems/e = cancels the placement of illegal items
         illegalitems/a could be bypassed by using a right click autoclicker/autobuild or lag
