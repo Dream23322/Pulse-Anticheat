@@ -14,9 +14,9 @@ World.events.beforeChat.subscribe(msg => {
     const message = msg.message.toLowerCase();
     const player = msg.sender;
 
-    if(config.debug === true && message === "ping") console.warn(`${new Date()} | Pong!`);
+    if(config.debug === true && message === "ping") player.tell(`${new Date()} | Pong!`)
 
-    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true;
+    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true; player.tell("Please do not talk about clients in our chat!")
 
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
@@ -24,7 +24,7 @@ World.events.beforeChat.subscribe(msg => {
     }
 
     // BadPackets/2 = checks for invalid chat message lengths
-    if(config.modules.badpackets2.enabled === true && message.length > config.modules.badpackets2.maxlength || message.length < config.modules.badpackets2.minLength) flag(player, "BadPackets", "2", "Exploit", "messageLength", `${message.length}`, undefined, msg);
+    if(config.modules.badpackets2.enabled === true && message.length > config.modules.badpackets2.maxlength || message.length < config.modules.badpackets2.minLength) flag(player, "BadPackets", "2", "Exploit", false, false, false);
 
     // Spammer/A = checks if someone sends a message while moving and on ground
     if(config.modules.spammerA.enabled === true && player.hasTag('moving') && player.hasTag('ground') && !player.hasTag('jump'))
@@ -56,193 +56,180 @@ World.events.beforeChat.subscribe(msg => {
 });
 
 function checkPlayer() {
-Minecraft.system.run(({ currentTick }) => {
-    if(config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
-
-    // run as each player
-    for (const player of World.getPlayers()) {
-        try {
-
-        if(player.isGlobalBanned === true) {
+    Minecraft.system.run(() => {
+        if(config.modules.itemSpawnRateLimit.enabled) data.entitiesSpawnedInLastTick = 0;
+    
+        // run as each player
+        for (const player of World.getPlayers()) {
             try {
+    
+            if(player.isGlobalBanned === true) {
                 player.addTag("by:Pulse Anticheat");
                 player.addTag("reason:You are Pulse Anticheat global banned!");
                 player.addTag("isBanned");
-            } catch {}
-        }
-
-        if(config.modules.banA.enabled && player.hasTag("killauraBan")) {
-            flag(player, "ban", "Ban", "A", false, false, false)
-        }
-            
-
-        // sexy looking ban message
-        if(player.hasTag("isBanned")) banMessage(player);
-
-        if(player.blocksBroken !== 0 && config.modules.nukerA.enabled === true) player.blocksBroken = 0;
-        if(player.entitiesHit !== [] && config.modules.killauraC.enabled === true) player.entitiesHit = [];
-        if(Date.now() - player.startBreakTime < config.modules.autotoolA.startBreakDelay) {
-            // console.warn(1, player.lastSelectedSlot, player.selectedSlot);
-            if(player.lastSelectedSlot !== player.selectedSlot) player.flagAutotoolA = true;
-        }
-
-        // BadPackets[5] = checks for horion freecam
-        if(config.modules.badpackets5.enabled && player.velocity.y.toFixed(6) === "0.420000" && !player.hasTag("dead")) {
-            player.badpackets5Ticks++;
-            if(player.badpackets5Ticks > 2) flag(player, "BadPackets", "5", "Exploit", "yVelocity", player.velocity.y.toFixed(6), true);
-        } else if(player.badpackets5Ticks !== 0) player.badpackets5Ticks--;
-
-        // Crasher/A = invalid pos check
-        if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
-            Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
-                flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
-
-        // anti-namespoof
-        // these values are set in the playerJoin config
-        if(player.flagNamespoofA === true) {
-            flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
-            player.flagNamespoofA = false;
-        }
-        if(player.flagNamespoofB === true) {
-            flag(player, "Namespoof", "B", "Exploit");
-            player.flagNamespoofB = false;
-        }
-        if(player.flagNamespoofC === true) {
-            flag(player, "Namespoof", "C", "Exploit", "oldName", player.oldName);
-            player.flagNamespoofC = false;
-        }
-
-        // player position shit
-        if(player.hasTag("moving")) {
-            player.runCommandAsync(`scoreboard players set @s xPos ${Math.floor(player.location.x)}`);
-            player.runCommandAsync(`scoreboard players set @s yPos ${Math.floor(player.location.y)}`);
-            player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
-        }
-
-        if(config.modules.bedrockValidate.enabled === true) {
-            if(getScore(player, "bedrock") >= 1) {
-                if(config.modules.bedrockValidate.overworld && player.dimension.id === "minecraft:overworld") {
-                    player.runCommandAsync("fill ~-5 -64 ~-5 ~5 -64 ~5 bedrock");
-                    player.runCommandAsync("fill ~-4 -59 ~-4 ~4 319 ~4 air 0 replace bedrock");
-                }
-
-                if(config.modules.bedrockValidate.nether && player.dimension.id === "minecraft:nether") { 
-                    player.runCommandAsync("fill ~-5 0 ~-5 ~5 0 ~5 bedrock");
-                    player.runCommandAsync("fill ~-5 127 ~-5 ~5 127 ~5 bedrock");
-                    player.runCommandAsync("fill ~-5 5 ~-5 ~5 120 ~5 air 0 replace bedrock");
-                }
-            } else config.modules.bedrockValidate.enabled = false;
-        }
-
-        const playerSpeed = Math.sqrt(Math.abs(player.velocity.x**2 + player.velocity.z**2)).toFixed(2);
-
-        // if(config.debug === true) console.warn(`${new Date()} | ${player.name}'s speed: ${playerSpeed.toFixed(4)} Vertical Speed: ${player.velocity.y}`);
-
-        // NoSlow/A = speed limit check
-        if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
-            if(!player.getEffect(Minecraft.MinecraftEffectTypes.speed) && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right", 0) >= 5) {
-                flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
             }
-        }
-
-        const container = player.getComponent('inventory').container;
-        for (let i = 0; i < container.size; i++) {
-            const item = container.getItem(i);
-            if(typeof item === "undefined") continue;
-
-            // Illegalitems/C = item stacked over 64 check
-            if(config.modules.illegalitemsC.enabled && item.amount > config.modules.illegalitemsC.maxStack)
-                flag(player, "IllegalItems", "C", "Exploit", "stack", item.amount, undefined, undefined, i);
-                
-            // Illegalitems/D = additional item clearing check
-            if(config.modules.illegalitemsD.enabled && config.itemLists.items_very_illegal.includes(item.typeId))
-                flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
-
-            // CommandBlockExploit/H = clear items
-            if(config.modules.commandblockexploitH.enabled && config.itemLists.cbe_items.includes(item.typeId))
-                flag(player, "CommandBlockExploit", "H", "Exploit", "item", item.typeId, undefined, undefined, i);
-                
-            // Illegalitems/F = Checks if an item has a name longer then 32 characters
-            if(config.modules.illegalitemsF.enabled && item.nameTag?.length > config.modules.illegalitemsF.length)
-                flag(player, "IllegalItems", "F", "Exploit", "name", `${item.nameTag},length=${item.nameTag.length}`, undefined, undefined, i);
-
-            // AntiShulker/A = Checks for shulkers
-            if(config.modules.antishulkerA.enabled) {
-                if(config.modules.antishulkerA.normalShulkers.includes(item.typeId) && !player.hasTag("op") || config.modules.antishulkerA.antiBypass === true && config.itemLists.antiBypassItems.includes(item.typeId) && !player.hasTag("op")) {
-                    try {
-                        player.runCommand("testfor @s[m=!c]")
-                        flag(player, "AntiShulker", "A", "Exploit", `Item=${item.typeId}`, false, false);
-                        player.runCommandAsync("clear @s");
-                    } catch {}
-                }
+    
+            // sexy looking ban message
+            if(player.hasTag("isBanned")) banMessage(player);
+    
+            if(player.blocksBroken !== 0 && config.modules.nukerA.enabled === true) player.blocksBroken = 0;
+            if(player.entitiesHit !== [] && config.modules.killauraC.enabled === true) player.entitiesHit = [];
+            if(Date.now() - player.startBreakTime < config.modules.autotoolA.startBreakDelay && player.lastSelectedSlot !== player.selectedSlot) {
+                player.flagAutotoolA = true;
+                player.autotoolSwitchDelay = Date.now() - player.startBreakTime;
             }
-            // BadEnchants/D = checks if an item has a lore
-            if(config.modules.badenchantsD.enabled && item.getLore().length) {
-                if(!config.modules.badenchantsD.exclusions.includes(String(item.getLore())))
-                    flag(player, "BadEnchants", "D", "Exploit", "lore", String(item.getLore()), undefined, undefined, i);
+    
+            // BadPackets[5] = checks for horion freecam
+            if(config.modules.badpackets5.enabled && player.velocity.y.toFixed(6) === "0.420000" && !player.hasTag("dead") && !player.hasTag("sleeping")) {
+                player.badpackets5Ticks++;
+                if(player.badpackets5Ticks > config.modules.badpackets5.sample_size) flag(player, "BadPackets", "5", "Exploit", "yVelocity", player.velocity.y.toFixed(6), true);
+            } else if(player.badpackets5Ticks !== 0) player.badpackets5Ticks--;
+    
+            // Crasher/A = invalid pos check
+            if(config.modules.crasherA.enabled && Math.abs(player.location.x) > 30000000 ||
+                Math.abs(player.location.y) > 30000000 || Math.abs(player.location.z) > 30000000) 
+                    flag(player, "Crasher", "A", "Exploit", "x_pos", `${player.location.x},y_pos=${player.location.y},z_pos=${player.location.z}`, true);
+    
+            // anti-namespoof
+            // these values are set in the playerJoin config
+            if(player.flagNamespoofA === true) {
+                flag(player, "Namespoof", "A", "Exploit", "nameLength", player.name.length);
+                player.flagNamespoofA = false;
             }
-            
-            if(config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled) {
-                const itemEnchants = item.getComponent("enchantments").enchantments;
-
-                /*
-                    As of 1.19.30, Mojang removed all illegal items from MinecraftItemTypes, although this change
-                    doesnt matter, they mistakenly removed 'written_book', which can be obtained normally.
-                    Written books will make this code error out, and make any items that havent been check bypass
-                    anti32k checks. In older versions, this error will also make certian players not get checked
-                    leading to a Scythe Semi-Gametest Disabler method.
-                */
-                let itemType = Minecraft.ItemTypes.get(item.typeId);
-                if(typeof itemType === "undefined") itemType = Minecraft.ItemTypes.get("minecraft:book");
-
-                const item2 = new Minecraft.ItemStack(itemType, 1, item.data);
-                const item2Enchants = item2.getComponent("enchantments").enchantments;
-                const enchantments = [];
-                
-                const loopIterator = (iterator) => {
-                    const iteratorResult = iterator.next();
-                    if(iteratorResult.done === true) return;
-                    const enchantData = iteratorResult.value;
-
-                    // badenchants/A = checks for items with invalid enchantment levels
-                    if(config.modules.badenchantsA.enabled === true) {
-                        const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
-                        if(typeof maxLevel === "number") {
-                            if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-                        } else if(enchantData.level > enchantData.type.maxLevel)
-                            flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+            if(player.flagNamespoofB === true) {
+                flag(player, "Namespoof", "B", "Exploit");
+                player.flagNamespoofB = false;
+            }
+            if(player.flagNamespoofC === true) {
+                flag(player, "Namespoof", "C", "Exploit", "oldName", player.oldName);
+                player.flagNamespoofC = false;
+            }
+    
+            // player position shit
+            if(player.hasTag("moving")) {
+                player.runCommandAsync(`scoreboard players set @s xPos ${Math.floor(player.location.x)}`);
+                player.runCommandAsync(`scoreboard players set @s yPos ${Math.floor(player.location.y)}`);
+                player.runCommandAsync(`scoreboard players set @s zPos ${Math.floor(player.location.z)}`);
+            }
+    
+            if(config.modules.bedrockValidate.enabled === true) {
+                if(getScore(player, "bedrock") >= 1) {
+                    if(config.modules.bedrockValidate.overworld && player.dimension.id === "minecraft:overworld") {
+                        player.runCommandAsync("fill ~-5 -64 ~-5 ~5 -64 ~5 bedrock");
+                        player.runCommandAsync("fill ~-4 -59 ~-4 ~4 319 ~4 air 0 replace bedrock");
                     }
-
-                    // badenchants/B = checks for negative enchantment levels
-                    if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
-                        flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-
-                    // badenchants/C = checks if an item has an enchantment which isnt support by the item
-                    if(config.modules.badenchantsC.enabled) {
-                        if(!item2.getComponent("enchantments").enchantments.canAddEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1))) {
-                            flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-                        }
-
-                        if(config.modules.badenchantsB.multi_protection === true) {
-                            item2Enchants.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1));
-                            item2.getComponent("enchantments").enchantments = item2Enchants;
-                        }
+    
+                    if(config.modules.bedrockValidate.nether && player.dimension.id === "minecraft:nether") { 
+                        player.runCommandAsync("fill ~-5 0 ~-5 ~5 0 ~5 bedrock");
+                        player.runCommandAsync("fill ~-5 127 ~-5 ~5 127 ~5 bedrock");
+                        player.runCommandAsync("fill ~-5 5 ~-5 ~5 120 ~5 air 0 replace bedrock");
                     }
-
-                    // BadEnchants/D = checks if an item has duplicated enchantments
-                    if(config.modules.badenchantsD.enabled === true) {
-                        if(enchantments.includes(enchantData.type.id)) {
+                } else config.modules.bedrockValidate.enabled = false;
+            }
+    
+            const playerSpeed = Math.sqrt(Math.abs(player.velocity.x**2 + player.velocity.z**2)).toFixed(2);
+    
+            // NoSlow/A = speed limit check
+            if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
+                if(!player.getEffect(Minecraft.MinecraftEffectTypes.speed) && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right", 0) >= 5) {
+                    flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
+                }
+            }
+    
+            const container = player.getComponent('inventory').container;
+            for (let i = 0; i < container.size; i++) {
+                const item = container.getItem(i);
+                if(typeof item === "undefined") continue;
+    
+                // Illegalitems/C = item stacked over 64 check
+                if(config.modules.illegalitemsC.enabled && item.amount > config.modules.illegalitemsC.maxStack)
+                    flag(player, "IllegalItems", "C", "Exploit", "stack", item.amount, undefined, undefined, i);
+                    
+                // Illegalitems/D = additional item clearing check
+                if(config.modules.illegalitemsD.enabled && config.itemLists.items_very_illegal.includes(item.typeId))
+                    flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
+    
+                // CommandBlockExploit/H = clear items
+                if(config.modules.commandblockexploitH.enabled && config.itemLists.cbe_items.includes(item.typeId))
+                    flag(player, "CommandBlockExploit", "H", "Exploit", "item", item.typeId, undefined, undefined, i);
+                    
+                // Illegalitems/F = Checks if an item has a name longer then 32 characters
+                if(config.modules.illegalitemsF.enabled && item.nameTag?.length > config.modules.illegalitemsF.length)
+                    flag(player, "IllegalItems", "F", "Exploit", "name", `${item.nameTag},length=${item.nameTag.length}`, undefined, undefined, i);
+    
+                // BadEnchants/D = checks if an item has a lore
+                if(config.modules.badenchantsD.enabled && item.getLore().length) {
+                    if(!config.modules.badenchantsD.exclusions.includes(String(item.getLore())))
+                        flag(player, "BadEnchants", "D", "Exploit", "lore", String(item.getLore()), undefined, undefined, i);
+                }
+    
+                if(config.modules.resetItemData.enabled === true && config.modules.resetItemData.items.includes(item.typeId)) {
+                    // This creates a duplicate version of the item, with just its amount and data.
+                    const item2 = new Minecraft.ItemStack(Minecraft.Items.get(item.typeId), item.amount, item.data);
+                    container.setItem(i, item2);
+                }
+    
+                if(config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled) {
+                    const itemEnchants = item.getComponent("enchantments").enchantments;
+    
+                    /*
+                        As of 1.19.30, Mojang removed all illegal items from MinecraftItemTypes, although this change
+                        doesnt matter, they mistakenly removed 'written_book', which can be obtained normally.
+                        Written books will make this code error out, and make any items that havent been check bypass
+                        anti32k checks. In older versions, this error will also make certian players not get checked
+                        leading to a Scythe Semi-Gametest Disabler method.
+                    */
+                    let itemType = Minecraft.ItemTypes.get(item.typeId);
+                    if(typeof itemType === "undefined") itemType = Minecraft.ItemTypes.get("minecraft:book");
+    
+                    const item2 = new Minecraft.ItemStack(itemType, 1, item.data);
+                    const item2Enchants = item2.getComponent("enchantments").enchantments;
+                    const enchantments = [];
+                    
+                    const loopIterator = (iterator) => {
+                        const iteratorResult = iterator.next();
+                        if(iteratorResult.done === true) return;
+                        const enchantData = iteratorResult.value;
+    
+                        // badenchants/A = checks for items with invalid enchantment levels
+                        if(config.modules.badenchantsA.enabled === true) {
+                            const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
+                            if(typeof maxLevel === "number") {
+                                if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                            } else if(enchantData.level > enchantData.type.maxLevel)
+                                flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                        }
+    
+                        // badenchants/B = checks for negative enchantment levels
+                        if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
+                            flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+    
+                        // badenchants/C = checks if an item has an enchantment which isnt support by the item
+                        if(config.modules.badenchantsC.enabled) {
+                            if(!item2.getComponent("enchantments").enchantments.canAddEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1))) {
+                                flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                            }
+    
+                            if(config.modules.badenchantsB.multi_protection === true) {
+                                item2Enchants.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1));
+                                item2.getComponent("enchantments").enchantments = item2Enchants;
+                            }
+                        }
+    
+                        // BadEnchants/D = checks if an item has duplicated enchantments
+                        if(config.modules.badenchantsD.enabled === true) {
+                            if(enchantments.includes(enchantData.type.id)) {
+                                enchantments.push(enchantData.type.id);
+                                flag(player, "BadEnchants", "D", "Exploit", "enchantments", enchantments.join(", "), false, undefined , i);
+                            }
                             enchantments.push(enchantData.type.id);
-                            flag(player, "BadEnchants", "D", "Exploit", "enchantments", enchantments.join(", "), false, undefined , i);
                         }
-                        enchantments.push(enchantData.type.id);
-                    }
-
-                    loopIterator(iterator);
-                };
-                loopIterator(itemEnchants[Symbol.iterator]());
+    
+                        loopIterator(iterator);
+                    };
+                    loopIterator(itemEnchants[Symbol.iterator]());
+                }
             }
-        }
 
         // invalidsprint/a = checks for sprinting with the blindness effect
         if(config.modules.invalidsprintA.enabled && player.getEffect(Minecraft.MinecraftEffectTypes.blindness) && player.hasTag('sprint'))
@@ -264,8 +251,9 @@ Minecraft.system.run(({ currentTick }) => {
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
 
             if(isNotInAir === false) flag(player, "Movement", "A", "Movement", "vertical_speed", Math.abs(player.velocity.y).toFixed(4), true);
-                else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with flyA motion but was found near solid blocks.`);
+                else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with Movement/A motion but was found near solid blocks.`);
         }
+
         // Movement/C = Checks for the weird TP like speed movement
         if(config.modules.movementC.enabled) {
             const position1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
@@ -273,23 +261,26 @@ Minecraft.system.run(({ currentTick }) => {
                 const position2 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
                 const distance = Math.abs(position1 - position2);
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
-                    flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false)
+                    flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false);
             }
         }   
+
         // Fly/A = Checks for airwalk cheats
-        if(config.modules.flyA.enabled && !player.hasTag("op")) {
+        if(config.modules.flyA.enabled && !player.hasTag("op")&& !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const lastLocationBeforeCheck = new Minecraft.BlockLoction(player.location.x, player.location.y, player.location.z)
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
-            if(playerSpeed > config.modules.flyA.speed && isNotInAir === false) {
-                flag(player, "Fly", "A", "Movement", `Speed=${playerSpeed}`, `InAir=${isNotInAir}`);
+            if(playerSpeed > config.modules.flyA.speed && isNotInAir === false ) {
+                flag(player, "Fly", "A", "Movement", `Speed=${player.speed}`, false, false);
                 player.runCommandAsync(`tp ${player} ${lastLocationBeforeCheck}`);
                 player.runCommandAsync(`tp ${player} ${player}`);
 
             }
         }
+        
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
+        // Thanks Visual1Impact / Paradox-Anticheat
         if(config.modules.antikbA.enabled) {
             if(Number((player.velocity.y + player.velocity.x + player.velocity.z).toFixed(3)) <= config.modules.antikbA.magnitude) {
                 if(player.hasTag("attacked") && !player.hasTag("dead") && !player.hasTag("gliding") && !player.hasTag("levitating") && !player.hasTag("flying")) {
@@ -303,9 +294,9 @@ Minecraft.system.run(({ currentTick }) => {
         }
 
         // Speed/A = Checks for unaturall speed
-        if(config.modules.speedA.enabled) {
+        if(config.modules.speedA.enabled && !player.hasTag("attacked")) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
-                flag(player, "Speed", "A", "Movement", `speed=${playerSpeed}`, false, false)
+                flag(player, "Speed", "A", "Movement", `Speed=${player.speed}`, false, false)
         }
         
         // speed/b = strafe speed (This was a fuck hell to stop false flags)
@@ -317,7 +308,7 @@ Minecraft.system.run(({ currentTick }) => {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
             if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
 
-            // player.runCommandAsync(`say ${player.cps}, ${player.lastCPS}. ${player.cps - player.lastCPS}`);
+            player.runCommandAsync(`tell @a[tag=seeCPS] ${player}'s CPS=${player.cps}`);
 
             player.firstAttack = Date.now();
             player.cps = 0;
@@ -753,7 +744,7 @@ World.events.entityHit.subscribe((entityHit) => {
         if(config.modules.reachB.enabled) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-            if(config.debug === true) console.warn(`${player.name} attacked ${entityHitName} with a distance of ${distance}`);
+            if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
 
             if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId) && player.hasTag("reported")) {
                 // we ignore gmc players as they get increased reach
