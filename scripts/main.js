@@ -764,6 +764,12 @@ World.events.entityHit.subscribe((entityHit) => {
         // Check if the player attacks an entity while sleeping
         if(config.modules.killauraD.enabled === true && player.hasTag("sleeping")) {
             flag(player, "Killaura", "D", "Combat");
+	}
+        // Killaura/E = Checks for htiting invalid entities
+        if(config.modules.killauraE.enabled) {
+            if(config.modules.killauraE.entities.includes(entity.typeId)) {
+                flag(player, "Kilaura", "E", "Combat", `Entity=${entity.typeId}`)
+            }
         }
     }
 
