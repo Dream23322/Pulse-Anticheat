@@ -276,6 +276,19 @@ Minecraft.system.run(({ currentTick }) => {
                     flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false)
             }
         }   
+        // Fly/A = Checks for airwalk cheats
+        if(config.modules.flyA.enabled && !player.hasTag("op")) {
+            const lastLocationBeforeCheck = new Minecraft.BlockLoction(player.location.x, player.location.y, player.location.z)
+            const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+            const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
+            const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+            if(playerSpeed > config.modules.flyA.speed && isNotInAir === false) {
+                flag(player, "Fly", "A", "Movement", `Speed=${playerSpeed}`, `InAir=${isNotInAir}`);
+                player.runCommandAsync(`tp ${player} ${lastLocationBeforeCheck}`);
+                player.runCommandAsync(`tp ${player} ${player}`);
+
+            }
+        }
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
         if(config.modules.antikbA.enabled) {
             if(Number((player.velocity.y + player.velocity.x + player.velocity.z).toFixed(3)) <= config.modules.antikbA.magnitude) {
