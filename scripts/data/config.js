@@ -528,9 +528,15 @@ export default
             "minVlbeforePunishment": 0
         },
         "fastuseB": {
-            "enabled": true,
-            "min_eat_delay": 1.61,
+            "enabled": false,
+            "min_eat_delay": 20,
             "punishment": "none",
+            "items": [
+                "minecraft:apple",
+                "minecraft:golden_apple",
+                "minecraft:enchanted_golden_apple"
+                
+            ],
             "minVlbeforePunishment": 0
         },
         "killauraE": {
