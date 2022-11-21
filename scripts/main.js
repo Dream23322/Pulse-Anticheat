@@ -699,8 +699,8 @@ World.events.entityHit.subscribe((entityHit) => {
     if(typeof entity === "object") {
         // killaura/C = checks for multi-aura
         if(config.modules.killauraC.enabled) {
-            if(!player.entitiesHit.includes(entity.id)) {
-                player.entitiesHit.push(entity.id);
+            if(!player.entitiesHit.includes(entity.typeId)) {
+                player.entitiesHit.push(entity.typeId);
                 if(player.entitiesHit.length >= config.modules.killauraC.entities) {
                     flag(player, "KillAura", "C", "Combat", "entitiesHit", player.entitiesHit.length);
                 }
