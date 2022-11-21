@@ -488,13 +488,15 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
         if(config.modules.antigriefA.item.includes(item.typeId)) {
             flag(player, "AntiGrief", "A", "Misc", false, false, false);
             beforeItemUseOn.cancel = true;
+	    player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
     }
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
-            flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
-            beforeItemUseOn.cancel = true;
+	    flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
+	    beforeItemUseOn.cancel = true;
+	    player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
     }
     /*
