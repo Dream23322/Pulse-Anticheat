@@ -806,6 +806,19 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
         }
         player.lastThrow = Date.now();
     }
+    // Fastuse/B = Checks for eating fast
+    if(config.modules.fastuseB.enabled) {
+        if(config.modules.fastuseB.items.includes(item.typeId)) {
+            const startTime = Date.now()
+            if(player.hasTag("left")) {
+                const endTime = Date.now()
+                const overallTime = startTime - endTime
+                if(overallTime < config.modules.fastuseB.min_eat_delay) {
+                    flag(player, "Fastuse", "B", "Misc", `EatTime=${overallTime}`, false, false)
+                }
+            }
+        }
+    }
     // patch a bypass for the freeze system
     if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
         beforeItemUse.cancel = true;
