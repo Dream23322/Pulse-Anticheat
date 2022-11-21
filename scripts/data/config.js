@@ -611,6 +611,32 @@ export default
                 */
                "minecraft:end_crystal"
             ]
+        },
+         "resetItemData": {
+            "enabled": false,
+            "items": [
+                "minecraft:armor_stand",
+                "minecraft:barrel",
+                "minecraft:blast_furnace",
+                "minecraft:brewing_stand",
+                "minecraft:campfire",
+                "minecraft:soul_campfire",
+                "minecraft:cauldron",
+                "minecraft:chest",
+                "minecraft:trapped_chest",
+                "minecraft:dropper",
+                "minecraft:flower_pot",
+                "minecraft:hopper",
+                "minecraft:frame",
+                "minecraft:glow_frame",
+                "minecraft:jukebox",
+                "minecraft:lectern",
+                "minecraft:chest_minecart",
+                "minecraft:hopper_minecart",
+                "minecraft:smoker",
+                "minecraft:end_gateway",
+                "minecraft:sponge"
+            ]
         }
     },
     "itemLists": {
