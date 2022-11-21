@@ -571,10 +571,10 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.125,
+            "speed": 0.1235,
             "punishment": "kick",
             "minVlbeforePunishment": 5
-        }
+        },
         "antishulkerA": {
             "enabled": true,
             /*
@@ -591,7 +591,7 @@ export default
         "antikbA" : {
             "enabled": true,
             "punishment": "kick",
-            "magnitude": -0.078,
+            "magnitude": -0.077,
             "minVlbeforePunishment": 10
         },
         "antigriefA": {
@@ -637,6 +637,12 @@ export default
                 "minecraft:end_gateway",
                 "minecraft:sponge"
             ]
+        },
+         "flyA": {
+            "enabled": true,
+            "punishment": "none", 
+            "speed": 0.1221,
+            "minVlbeforePunishment": 0
         }
     },
     "itemLists": {
