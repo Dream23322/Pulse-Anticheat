@@ -181,8 +181,8 @@ Minecraft.system.run(({ currentTick }) => {
                 if(!config.modules.badenchantsD.exclusions.includes(String(item.getLore())))
                     flag(player, "BadEnchants", "D", "Exploit", "lore", String(item.getLore()), undefined, undefined, i);
             }
-
-            if((config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled) && currentTick % 2) {
+            
+            if(config.modules.badenchantsA.enabled || config.modules.badenchantsB.enabled || config.modules.badenchantsC.enabled) {
                 const itemEnchants = item.getComponent("enchantments").enchantments;
 
                 /*
@@ -197,37 +197,50 @@ Minecraft.system.run(({ currentTick }) => {
 
                 const item2 = new Minecraft.ItemStack(itemType, 1, item.data);
                 const item2Enchants = item2.getComponent("enchantments").enchantments;
+                const enchantments = [];
+                
+                const loopIterator = (iterator) => {
+                    const iteratorResult = iterator.next();
+                    if(iteratorResult.done === true) return;
+                    const enchantData = iteratorResult.value;
 
-                for (const enchantment in Minecraft.MinecraftEnchantmentTypes) {
-                    const enchantData = itemEnchants.getEnchantment(Minecraft.MinecraftEnchantmentTypes[enchantment]);
+                    // badenchants/A = checks for items with invalid enchantment levels
+                    if(config.modules.badenchantsA.enabled === true) {
+                        const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
+                        if(typeof maxLevel === "number") {
+                            if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                        } else if(enchantData.level > enchantData.type.maxLevel)
+                            flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                    }
 
-                    if(typeof enchantData === "object") {
-                        // badenchants/A = checks for items with invalid enchantment levels
-                        if(config.modules.badenchantsA.enabled === true) {
-                            const maxLevel = config.modules.badenchantsA.levelExclusions[enchantData.type.id];
-                            if(typeof maxLevel === "number") {
-                                if(enchantData.level > maxLevel) flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-                            } else if(enchantData.level > Minecraft.MinecraftEnchantmentTypes[enchantment].maxLevel)
-                                flag(player, "BadEnchants", "A", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+                    // badenchants/B = checks for negative enchantment levels
+                    if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
+                        flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
+
+                    // badenchants/C = checks if an item has an enchantment which isnt support by the item
+                    if(config.modules.badenchantsC.enabled) {
+                        if(!item2.getComponent("enchantments").enchantments.canAddEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1))) {
+                            flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
                         }
-						
-                        // badenchants/B = checks for negative enchantment levels
-                        if(config.modules.badenchantsB.enabled && enchantData.level <= 0)
-                            flag(player, "BadEnchants", "B", "Exploit", "enchant", `minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
 
-                        // badenchants/C = checks if an item has an enchantment which isnt support by the item
-                        if(config.modules.badenchantsC.enabled) {
-                            if(!item2.getComponent("enchantments").enchantments.canAddEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantment], 1))) {
-                                flag(player, "BadEnchants", "C", "Exploit", "item", `${item.typeId},enchant=minecraft:${enchantData.type.id},level=${enchantData.level}`, undefined, undefined, i);
-                            }
-
-                            if(config.modules.badenchantsB.multi_protection === true) {
-                                item2Enchants.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1));
-                                item2.getComponent("enchantments").enchantments = item2Enchants;
-                            }
+                        if(config.modules.badenchantsB.multi_protection === true) {
+                            item2Enchants.addEnchantment(new Minecraft.Enchantment(Minecraft.MinecraftEnchantmentTypes[enchantData.type.id], 1));
+                            item2.getComponent("enchantments").enchantments = item2Enchants;
                         }
                     }
-                }
+
+                    // BadEnchants/D = checks if an item has duplicated enchantments
+                    if(config.modules.badenchantsD.enabled === true) {
+                        if(enchantments.includes(enchantData.type.id)) {
+                            enchantments.push(enchantData.type.id);
+                            flag(player, "BadEnchants", "D", "Exploit", "enchantments", enchantments.join(", "), false, undefined , i);
+                        }
+                        enchantments.push(enchantData.type.id);
+                    }
+
+                    loopIterator(iterator);
+                };
+                loopIterator(itemEnchants[Symbol.iterator]());
             }
         }
 
@@ -488,15 +501,15 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
         if(config.modules.antigriefA.item.includes(item.typeId)) {
             flag(player, "AntiGrief", "A", "Misc", false, false, false);
             beforeItemUseOn.cancel = true;
-	    player.runCommandAsync(`clear ${player} ${item.typeId}` );
+            player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
     }
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
-	    flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
-	    beforeItemUseOn.cancel = true;
-	    player.runCommandAsync(`clear ${player} ${item.typeId}` );
+            flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
+            beforeItemUseOn.cancel = true;
+            player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
     }
     /*
@@ -766,7 +779,8 @@ World.events.entityHit.subscribe((entityHit) => {
         // Check if the player attacks an entity while sleeping
         if(config.modules.killauraD.enabled === true && player.hasTag("sleeping")) {
             flag(player, "Killaura", "D", "Combat");
-	}
+        }
+
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
             if(config.modules.killauraE.entities.includes(entity.typeId)) {
@@ -806,6 +820,7 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
         }
         player.lastThrow = Date.now();
     }
+
     // Fastuse/B = Checks for eating fast
     if(config.modules.fastuseB.enabled) {
         if(config.modules.fastuseB.items.includes(item.typeId)) {
