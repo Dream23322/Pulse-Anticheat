@@ -643,6 +643,13 @@ export default
             "punishment": "none", 
             "speed": 0.1221,
             "minVlbeforePunishment": 0
+        },
+
+        "flyB": {
+            "enabled": true,
+            "minVelocity": 0.122,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
         }
     },
     "itemLists": {
