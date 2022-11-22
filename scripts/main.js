@@ -280,13 +280,13 @@ function checkPlayer() {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
-            if(playerSpeed > config.modules.flyA.speed && isNotInAir === false ) {
+            if(playerSpeed > config.modules.flyA.speed && isNotInAir === false && !player.getEffect(Minecraft.MinecraftEffectTypes.speed)) {
                 flag(player, "Fly", "A", "Movement", `Speed=${player.speed}`, false, false);
                 player.runCommandAsync(`tp ${player} ${lastLocationBeforeCheck}`);
                 player.runCommandAsync(`tp ${player} ${player}`);
 
             }
-        }    
+        } 
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
         // Thanks Visual1Impact / Paradox-Anticheat
         if(config.modules.antikbA.enabled) {
