@@ -278,7 +278,14 @@ function checkPlayer() {
 
             }
         }
-        
+        // Fly/B = Checks for vertical Fly
+        if(config.modules.flyB.enabled) {
+            if(player.velocity.x === 0 && player.velocity.z === 0) {
+                if(player.velocity.y > config.modules.flyB.minVelocity) {
+                    flag(player, "Fly", "B", "Movement", `Velocity=${player.velocity.y}`, false, false)
+                }
+            }
+        }      
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
         // Thanks Visual1Impact / Paradox-Anticheat
         if(config.modules.antikbA.enabled) {
