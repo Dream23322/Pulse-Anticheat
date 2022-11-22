@@ -244,7 +244,7 @@ function checkPlayer() {
         }
             
         // Movement/a
-        if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+        if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("attacked") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
 
@@ -255,18 +255,27 @@ function checkPlayer() {
         }
 
         // Movement/C = Checks for the weird TP like speed movement
-        if(config.modules.movementC.enabled) {
+        if(config.modules.movementC.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const position1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
-            if(player.velocity.x == 0 || player.velocity.y == 0) {
+            if(player.velocity.x === 0 || player.velocity.z === 0) {
                 const position2 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
                 const distance = Math.abs(position1 - position2);
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
                     flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false);
             }
-        }   
+        }  
+        
+        // Fly/B = Checks for vertical Fly
+        if(config.modules.flyB.enabled) {
+            if(player.velocity.x === 0 && player.velocity.z === 0) {
+                if(player.velocity.y > config.modules.flyB.minVelocity && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+                    flag(player, "Fly", "B", "Movement", `Velocity=${player.velocity.y}`, false, false)
+                }
+            }
+        }
 
         // Fly/A = Checks for airwalk cheats
-        if(config.modules.flyA.enabled && !player.hasTag("op")&& !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+        if(config.modules.flyA.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const lastLocationBeforeCheck = new Minecraft.BlockLoction(player.location.x, player.location.y, player.location.z)
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
@@ -277,15 +286,7 @@ function checkPlayer() {
                 player.runCommandAsync(`tp ${player} ${player}`);
 
             }
-        }
-        // Fly/B = Checks for vertical Fly
-        if(config.modules.flyB.enabled) {
-            if(player.velocity.x === 0 && player.velocity.z === 0) {
-                if(player.velocity.y > config.modules.flyB.minVelocity) {
-                    flag(player, "Fly", "B", "Movement", `Velocity=${player.velocity.y}`, false, false)
-                }
-            }
-        }      
+        }    
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
         // Thanks Visual1Impact / Paradox-Anticheat
         if(config.modules.antikbA.enabled) {
