@@ -286,7 +286,8 @@ function checkPlayer() {
                 player.runCommandAsync(`tp ${player} ${player}`);
 
             }
-        } 
+        }
+        
         // Anti-KB/A = checks for the weird way veloctiy works on horion/zephyr client
         // Thanks Visual1Impact / Paradox-Anticheat
         if(config.modules.antikbA.enabled) {
@@ -321,6 +322,7 @@ function checkPlayer() {
             player.firstAttack = Date.now();
             player.cps = 0;
         }
+
         // Autoclicker/B = checks for similar cps
         if(config.modules.autoclickerB.enabled) {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
@@ -356,7 +358,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
         player.blocksPlaced++;
 
         if(blocksPlaced.player > 1)
-            flag(player, "Scaffold", "A", "Placement", false, false, false);
+            flag(player, "Scaffold", "A", "Placement", `${blocksPlaced}`, false, false);
             // Stops block Placement
             blockPlace.cancel = true;
     }
