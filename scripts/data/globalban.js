@@ -34,6 +34,7 @@ export const banList = [
    "Noob",
    "DullHz",
    "Fe3rees",
+   "Milk`",
    "QP chandayo",
    "WickedJustin207",
    "Russak2245",
