@@ -650,6 +650,11 @@ export default
             "minVelocity": 0.122,
             "punishment": "none",
             "minVlbeforePunishment": 0
+        },
+        "badpackets6": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 100
         }
     },
     "itemLists": {
