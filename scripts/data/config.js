@@ -655,6 +655,12 @@ export default
             "enabled": true,
             "punishment": "kick",
             "minVlbeforePunishment": 100
+        },
+        "badpackets7": {
+            "enabled": true,
+            "minVelocity": 0.001,
+            "punishment": "none",
+            "minVlbeforePunishment": 100
         }
     },
     "itemLists": {
