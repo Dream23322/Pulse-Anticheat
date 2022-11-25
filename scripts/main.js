@@ -248,6 +248,13 @@ function checkPlayer() {
                 flag(player, "BadPackets", "5", "Exploit", false, false, false);
                 player.runCommand("tp @s @s");
             }
+        }
+        // BadPackets[7] = Checks for having velocity but not moving
+        if(config.modules.badpackets7.enabled) {
+            if(player.velocity.x > config.modules.badpackets7.minVelocity && player.velocity.y > config.modules.badpackets7.minVelocity && player.velocity.z > config.modules.badpackets7.minVelocity && !player.hasTag("moving")) {
+                flag(player, "BadPackets", "7", "Exploit", false, false, false);
+                player.runCommand("tp @s @s");
+            }
         }		    
         // Movement/a
         if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("attacked") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
