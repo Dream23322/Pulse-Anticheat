@@ -242,7 +242,13 @@ function checkPlayer() {
                     flag(player, "movement", "B", "Movement", undefined, undefined, true);
             }
         }
-            
+        // BadPackets[6] = Checks for moving with no velocity
+        if(config.modules.badpackets6.enabled) {
+            if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
+                flag(player, "BadPackets", "5", "Exploit", false, false, false);
+                player.runCommand("tp @s @s");
+            }
+        }		    
         // Movement/a
         if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("attacked") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
