@@ -2,7 +2,7 @@ export default
 {
     "debug": true,
     "flagWhitelist": [],
-    "appeal": "Unknown",
+    "appeal": "No Appeal",
     "customcommands": {
         "prefix": "!",
         "ban": {
@@ -455,7 +455,7 @@ export default
         },
         "killauraD": {
             "enabled": true,
-            "punishment": "ban",
+            "punishment": "none",
             "punishmentLength": "1d",
             "minVlbeforePunishment": 1
         },
@@ -502,7 +502,7 @@ export default
         "scaffoldC": {
             "enabled": true,
             "punishment": "kick",
-            "speed": 0.125,
+            "speed": 0.11,
             "minVlbeforePunishment": 5
         },
         "scaffoldD": {
@@ -523,12 +523,12 @@ export default
         },
         "fastuseA": {
             "enabled": true,
-            "use_delay": 150,
+            "use_delay": 170,
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
         "fastuseB": {
-            "enabled": false,
+            "enabled": true,
             "min_eat_delay": 20,
             "punishment": "none",
             "items": [
@@ -552,10 +552,11 @@ export default
         "autoclickerB": {
             "enabled": true,
             "punishment": "ban",
+            "minCPS": 3,
             "minCpsDiff": 0.81,
             "maxCpsDiff": 0.96,
             "punishmentLength": "21d",
-            "minVlbeforePunishment": 2
+            "minVlbeforePunishment": 3
         },
         "reachC": {
             "enabled": true,
@@ -571,9 +572,16 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.1235,
-            "punishment": "kick",
+            "speed": 0.126,
+             "punishment": "kick",
             "minVlbeforePunishment": 5
+        },
+        "movementC": {
+            "enabled": true,
+            "minDistance": 3,
+            "maxDistance": 10,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
         },
         "antishulkerA": {
             "enabled": true,
@@ -581,7 +589,7 @@ export default
             Having antibypass on will not allow peole without op to have chests or barrels, only use this if you have a 
             Kit-PvP like server.
             */
-            "antiBypass": false,
+            "antiBypass": true,
             "normalShulkers": "minecraft:shulker__box",
             "punishment": "ban",
             "punishmentLength": "12h",
@@ -594,11 +602,18 @@ export default
             "magnitude": -0.077,
             "minVlbeforePunishment": 10
         },
+        "illegalitemsK": {
+            "enabled": true,
+            "exclude_scythe_op": true,
+            "entities": [
+                "minecraft:chest_boat",
+                "minecraft:chest_minecart"
+            ],
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
         "antigriefA": {
-            "enabled": false,
-            /*
-            Having this on will stop people being able to use flint and steel, only use on kitpvp servers or servers that won't let you defaulty access flint and steel
-            */
+            "enabled": true,
             "item": "minecraft:flint_and_steel"
         },
         "antigriefB": {
@@ -609,10 +624,32 @@ export default
                 do it like this:
                 "minecraft:tnt"
                 */
-               "minecraft:end_crystal"
+               
             ]
         },
-         "resetItemData": {
+        "flyA": {
+            "enabled": true,
+            "punishment": "none", 
+            "speed": 0.123,
+            "invalidSpeeds": [
+                /* This was added to stop false flags when sprint jumping on laggy servers, it is still recommened you making this only flag
+                */
+               0.26,
+               0.22
+            ],
+            "minVlbeforePunishment": 0
+        },
+        "flyB": {
+            "enabled": true,
+            "minVelocity": 0.1226,
+            "punishment": "none",
+            "minVlbeforePunishment": 0
+        },
+        "antispamA": {
+            "enabled": true,
+            "delay": 40
+        },
+        "resetItemData": {
             "enabled": false,
             "items": [
                 "minecraft:armor_stand",
@@ -637,19 +674,6 @@ export default
                 "minecraft:end_gateway",
                 "minecraft:sponge"
             ]
-        },
-         "flyA": {
-            "enabled": true,
-            "punishment": "none", 
-            "speed": 0.1221,
-            "minVlbeforePunishment": 0
-        },
-
-        "flyB": {
-            "enabled": true,
-            "minVelocity": 0.122,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
         },
         "badpackets6": {
             "enabled": true,
@@ -683,7 +707,7 @@ export default
             "minecraft:tnt",
             "minecraft:end_crystal",
             "minecraft:respawn_anchor"
-        ],            
+        ],
         "antiBypassItems": [
             "minecraft:barrel",
             "minecraft:chest",
