@@ -8,7 +8,7 @@ import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 
 const World = Minecraft.world;
 
-if(config.debug === true) console.warn(`${new Date()} | Im not a dumbass and this actually worked :sunglasses:`);
+if(config.debug === true) console.warn(`${new Date()} | Im not a twat and this actually worked :sunglasses:`);
 
 World.events.beforeChat.subscribe(msg => {
     const message = msg.message.toLowerCase();
@@ -16,8 +16,12 @@ World.events.beforeChat.subscribe(msg => {
 
     if(config.debug === true && message === "ping") player.tell(`${new Date()} | Pong!`)
 
-    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) msg.cancel = true; player.tell("Please do not talk about clients in our chat!")
+    if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial")) {
+        msg.cancel = true;
+        player.tell("Please do not talk about clients in our chat!");
 
+    }
+     
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
         player.tell("§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou have been muted.");
@@ -231,6 +235,8 @@ function checkPlayer() {
                 }
             }
 
+
+
         // invalidsprint/a = checks for sprinting with the blindness effect
         if(config.modules.invalidsprintA.enabled && player.getEffect(Minecraft.MinecraftEffectTypes.blindness) && player.hasTag('sprint'))
             flag(player, "InvalidSprint", "A", "Movement", undefined, undefined, true);
@@ -242,20 +248,22 @@ function checkPlayer() {
                     flag(player, "movement", "B", "Movement", undefined, undefined, true);
             }
         }
+
         // BadPackets[6] = Checks for moving with no velocity
         if(config.modules.badpackets6.enabled) {
             if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
-                flag(player, "BadPackets", "5", "Exploit", false, false, false);
+                flag(player, "movement", "B", "Movement", undefined, undefined, true);
                 player.runCommand("tp @s @s");
             }
         }
+        
         // BadPackets[7] = Checks for having velocity but not moving
         if(config.modules.badpackets7.enabled) {
             if(player.velocity.x > config.modules.badpackets7.minVelocity && player.velocity.y > config.modules.badpackets7.minVelocity && player.velocity.z > config.modules.badpackets7.minVelocity && !player.hasTag("moving")) {
-                flag(player, "BadPackets", "7", "Exploit", false, false, false);
+                flag(player, "movement", "B", "Movement", undefined, undefined, true);
                 player.runCommand("tp @s @s");
             }
-        }		    
+        }
         // Movement/a
         if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("attacked") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
@@ -270,11 +278,11 @@ function checkPlayer() {
         // Movement/C = Checks for the weird TP like speed movement
         if(config.modules.movementC.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const position1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
-            if(player.velocity.x === 0 || player.velocity.z === 0) {
+            if(playerSpeed === 0 || playerSpeed === 0.1) {
                 const position2 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
                 const distance = Math.abs(position1 - position2);
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
-                    flag(player, "Movement", "C", "Movement", `distance=${distance}`, false, false);
+                flag(player, "movement", "C", "Movement", undefined, undefined, true);
             }
         }  
         
@@ -282,22 +290,21 @@ function checkPlayer() {
         if(config.modules.flyB.enabled) {
             if(player.velocity.x === 0 && player.velocity.z === 0) {
                 if(player.velocity.y > config.modules.flyB.minVelocity && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-                    flag(player, "Fly", "B", "Movement", `Velocity=${player.velocity.y}`, false, false)
+                    flag(player, "Fly", "B", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
                 }
             }
         }
 
+         
+
         // Fly/A = Checks for airwalk cheats
         if(config.modules.flyA.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-            const lastLocationBeforeCheck = new Minecraft.BlockLoction(player.location.x, player.location.y, player.location.z)
+            
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(playerSpeed > config.modules.flyA.speed && isNotInAir === false && !player.getEffect(Minecraft.MinecraftEffectTypes.speed)) {
-                flag(player, "Fly", "A", "Movement", `Speed=${player.speed}`, false, false);
-                player.runCommandAsync(`tp ${player} ${lastLocationBeforeCheck}`);
-                player.runCommandAsync(`tp ${player} ${player}`);
-
+                flag(player, "Fly", "A", "Movement", "speed", playerSpeed, true);
             }
         }
         
@@ -308,7 +315,7 @@ function checkPlayer() {
                 if(player.hasTag("attacked") && !player.hasTag("dead") && !player.hasTag("gliding") && !player.hasTag("levitating") && !player.hasTag("flying")) {
                     try {
                         player.runCommand("testfor @s[m=!c]")
-                        flag(player, "AntiKB", "A", "Combat", `Velocity=${player.velocity}`, false, false)
+                        flag(player, "AntiKB", "A", "Combat", undefined, undefined, true);
                     } catch {}
                 } 
                     
@@ -318,13 +325,8 @@ function checkPlayer() {
         // Speed/A = Checks for unaturall speed
         if(config.modules.speedA.enabled && !player.hasTag("attacked")) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
-                flag(player, "Speed", "A", "Movement", `Speed=${player.speed}`, false, false)
+                flag(player, "Speed", "A", "Movement", false, false, false)
         }
-        
-        // speed/b = strafe speed (This was a fuck hell to stop false flags)
-        if(config.modules.strafeB.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag('noMovement') && playerSpeed.toFixed(2) >= 0.127)
-            flag(player, "Strafe", "B", "Movement", false, false, false)
-        
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
@@ -534,7 +536,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
-            flag(player, "AntiGrief", "B", "Misc", `Item=${item.typeId}`, false, false);
+            flag(player, "NoSlow", "A", "Movement", "item", item.typeId, true);
             beforeItemUseOn.cancel = true;
             player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
