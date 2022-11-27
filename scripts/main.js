@@ -5,6 +5,7 @@ import config from "./data/config.js";
 import { banList } from "./data/globalban.js";
 import data from "./data/data.js";
 import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
+import {  } from "./commands/settings/.js";
 
 const World = Minecraft.world;
 
@@ -166,6 +167,14 @@ function checkPlayer() {
                 if(!config.modules.badenchantsD.exclusions.includes(String(item.getLore())))
                     flag(player, "BadEnchants", "D", "Exploit", "lore", String(item.getLore()), undefined, undefined, i);
             }
+
+
+            // Anti-Shulker/A = Checks for shulkers
+            if(config.modules.antishulkerA.enabled && config.modules.antishulkerA.antiBypassItems.includes(item.typeId) && config.modules.antishulkerA.antiBypass === true || config.modules.antishulkerA.normalShulkers.includes(item.typeId)) {
+                flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
+                player.runCommandAsync(`clear ${player} ${item.typeId}`);
+            }
+
 
             if(config.modules.resetItemData.enabled === true && config.modules.resetItemData.items.includes(item.typeId)) {
                 // This creates a duplicate version of the item, with just its amount and data.
@@ -339,11 +348,12 @@ function checkPlayer() {
         // Autoclicker/B = checks for similar cps
         if(config.modules.autoclickerB.enabled) {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            player.runCommandAsync(`tell @a[tag=seeCPS] ${player}'s CPS=${player.cps}`);
+            player.runCommandAsync(`title @a[tag=cpsView] ${player}'s CPS = ${player.cps}`);
             let cpsDiff = Math.abs(player.cps - player.lastCPS);
             if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
             player.lastCPS = player.cps;
         }
+
 		// BadPackets[4] = checks for invalid selected slot
         if(config.modules.badpackets4.enabled && player.selectedSlot < 0 || player.selectedSlot > 8) {
             flag(player, "BadPackets", "4", "Exploit", "selectedSlot", `${player.selectedSlot}`);
@@ -535,8 +545,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
-            flag(player, "NoSlow", "A", "Movement", "item", item.typeId, true);
-            beforeItemUseOn.cancel = true;
+            flag(player, "AntiGrief", "B", "Misc", "item", item.typeId, true);
             player.runCommandAsync(`clear ${player} ${item.typeId}` );
         }
     }
@@ -812,7 +821,7 @@ World.events.entityHit.subscribe((entityHit) => {
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
             if(config.modules.killauraE.entities.includes(entity.typeId)) {
-                flag(player, "Kilaura", "E", "Combat", `Entity=${entity.typeId}`)
+                flag(player, "Kilaura", "E", "Combat", "entity", entity.typeId);
             }
         }
     }
