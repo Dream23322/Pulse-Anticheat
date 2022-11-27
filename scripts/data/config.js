@@ -590,9 +590,14 @@ export default
             Having antibypass on will not allow peole without op to have chests or barrels, only use this if you have a 
             Kit-PvP like server.
             */
-            "antiBypass": true,
-            "normalShulkers": "minecraft:shulker__box",
+            "antiBypass": false,
+            "normalShulkers": "minecraft:shulker_box",
             "punishment": "ban",
+            "antiBypassItems": [
+                "minecraft:barrel",
+                "minecraft:chest",
+                "minecraft:trapped_chest"
+            ],
             "punishmentLength": "12h",
             "minVlbeforePunishment": 5
 
@@ -635,7 +640,7 @@ export default
             "minVlbeforePunishment": 0
         },
         "flyB": {
-            "enabled": true,
+            "enabled": false,
             "minVelocity": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 0
@@ -702,11 +707,6 @@ export default
             "minecraft:tnt",
             "minecraft:end_crystal",
             "minecraft:respawn_anchor"
-        ],
-        "antiBypassItems": [
-            "minecraft:barrel",
-            "minecraft:chest",
-            "minecraft:trapped_chest"
         ],
         "items_semi_illegal": [
             "minecraft:bedrock",
