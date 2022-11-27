@@ -572,9 +572,10 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.126,
-             "punishment": "kick",
-            "minVlbeforePunishment": 5
+            "speed": 0.33,
+            "punishment": "ban",
+            "punishmentLength": "12h",
+            "minVlbeforePunishment": 50 
         },
         "movementC": {
             "enabled": true,
@@ -630,18 +631,12 @@ export default
         "flyA": {
             "enabled": true,
             "punishment": "none", 
-            "speed": 0.123,
-            "invalidSpeeds": [
-                /* This was added to stop false flags when sprint jumping on laggy servers, it is still recommened you making this only flag
-                */
-               0.26,
-               0.22
-            ],
+            "speed": 0.30,
             "minVlbeforePunishment": 0
         },
         "flyB": {
             "enabled": true,
-            "minVelocity": 0.1226,
+            "minVelocity": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 0
         },
@@ -681,7 +676,7 @@ export default
             "minVlbeforePunishment": 100
         },
         "badpackets7": {
-            "enabled": true,
+            "enabled": false,
             "minVelocity": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 100
