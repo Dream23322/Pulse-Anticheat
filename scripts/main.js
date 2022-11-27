@@ -287,7 +287,7 @@ function checkPlayer() {
         }  
         
         // Fly/B = Checks for vertical Fly
-        if(config.modules.flyB.enabled && player.hasTag("jump")) {
+        if(config.modules.flyB.enabled) {
             if(player.velocity.x === 0 && player.velocity.z === 0) {
                 if(player.velocity.y > config.modules.flyB.minVelocity && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
                     flag(player, "Fly", "B", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
