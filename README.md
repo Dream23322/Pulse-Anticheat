@@ -24,9 +24,9 @@
 
 # Some things Pulse-Anticheat can detect
 
- 1. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Movement Hacks 
+ 1. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Fly
  
- 2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scaffold Hacks 
+ 2. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Scaffold
  
  3. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Killaura 
  
@@ -38,6 +38,11 @@
 
  7. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; InvMove 
  
+ 8. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Speed
+ 
+ 9. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Strafe/B-Hop
+ 
+ 10. &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Autoclicker
 
 And More!
 
