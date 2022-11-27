@@ -1,5 +1,5 @@
 execute @s[type=player,tag=!reported] ~~~ tellraw @a[tag=notify] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"selector":"@s"},{"text":"'s warns has been reset."}]}
-tellraw @s[tag=op] {"rawtext":[{"text":"To reset someone's warns please use this command \"/execute [playername] ~~~ function tools/resetwarns\""}]}
+
 
 execute @s[type=!player] ~~~ tellraw @a[tag=op] {"rawtext":[{"text":"§r§6[§cPulse§6]§r §cA non player entity has tried to use the resetwarns command. §7("},{"selector":"@s"},{"text":")"}]}
 
@@ -23,3 +23,5 @@ scoreboard players set @s[type=player,tag=!reported,scores={spammervl=1..}] spam
 scoreboard players set @s[type=player,tag=!reported,scores={reachvl=1..}] reachvl 0
 scoreboard players set @s[type=player,tag=!reported,scores={gamemodevl=1..}] gamemodevl 0
 scoreboard players set @s[type=player,tag=!reported,scores={scaffoldvl=1..}] scaffoldvl 0
+scoreboard players set @s[type=player,tag=!reported,scores={flyvl=1..}] flyvl 0
+scoreboard players set @s[type=player,tag=!reported,scores={speedvl=1..}] speedvl 0
