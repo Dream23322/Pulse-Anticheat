@@ -35,6 +35,8 @@
 					"/scoreboard players add scythe:config autoban 0",
 					"/scoreboard objectives add invalidsprint dummy",
 					"/scoreboard players add scythe:config invalidsprint 0",
+					"/scoreboard objectives add fly dummy",
+					"/scoreboard players add scythe:config fly 0",
 					// Setting Operations For Objective Types
 					"/scoreboard players operation @a npc = scythe:config npc",
 					"/scoreboard players operation @a commandblocks = scythe:config commandblocks",
@@ -49,7 +51,9 @@
 					"/scoreboard players operation @a gametestapi = scythe:config gametestapi",
 					"/scoreboard players operation @a autoban = scythe:config autoban",
 					"/scoreboard players operation @a invalidsprint = scythe:config invalidsprint",
+					"/scoreboard players operation @a antishulker = scythe:config antishulker",
 					// Anticheat Objectives
+					"/scoreboard objectives add fastusevl dummy",
 					"/scoreboard objectives add autototemvl dummy",
 					"/scoreboard objectives add autoshieldvl dummy",
 					"/scoreboard objectives add invmovevl dummy",
@@ -66,7 +70,8 @@
 					"/scoreboard objectives add invalidsprintvl dummy",
 					"/scoreboard objectives add movementvl dummy",
 					"/scoreboard objectives add last_attack dummy",
-					"/scoreboard players add aura_timer dummy",
+					"/scoreboard objectives add flyvl dummy",
+					"/scoreboard objectives add speedvl dummy",
 					// If enabled from previous login then activate
 					"/ability @s[tag=flying,m=!c] mayfly true",
 					// alert the user if Gametest Framework is not enabled
