@@ -16,10 +16,19 @@ World.events.beforeChat.subscribe(msg => {
 
     if(config.debug === true && message === "ping") player.tell(`${new Date()} | Pong!`)
 
+    // Stops people talking about hacked clients
     if(message.includes("the best minecraft bedrock utility mod") || message.includes("disepi/ambrosial") || message.includes("horion") || message.includes("zephyr") || message.includes("packet")) {
         msg.cancel = true;
-        player.tell("Please do not talk about clients in our chat!");
+        player.tell("§6[§cPulse-Anti-Spam§6]§c§l Please do not talk about clients in our chat!");
 
+    }
+
+    // Chat Filter = Stops people from cursing in chat
+    if(config.modules.chatFilter.enabled) {
+        if(message.includes(config.chatFilterData.curseWords)) {
+            msg.cancel = true;
+            player.tell("§6[§cPulse-Anti-Profanity§6]§c§1 Please do not use profanity in our chat!§a Keep it clean");
+        }
     }
      
     if(player.hasTag("isMuted")) {
