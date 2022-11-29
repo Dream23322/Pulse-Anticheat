@@ -177,10 +177,11 @@ function checkPlayer() {
             }
 
             // Anti-Shulker/A = Checks for shulkers
-            if(config.modules.antishulkerA.enabled && config.modules.antishulkerA.antiBypassItems.includes(item.typeId) && config.modules.antishulkerA.antiBypass === true || config.modules.antishulkerA.normalShulkers.includes(item.typeId)) {
+            if(config.modules.antishulkerA.enabled && config.itemLists.antiBypassItems.includes(item.typeId) && config.modules.antishulkerA.antiBypass === true || config.modules.antishulkerA.normalShulkers.includes(item.typeId)) {
                 flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
                 player.runCommandAsync(`clear ${player} ${item.typeId}`);
             }
+
             if(config.modules.resetItemData.enabled === true && config.modules.resetItemData.items.includes(item.typeId)) {
                 // This creates a duplicate version of the item, with just its amount and data.
                 const item2 = new Minecraft.ItemStack(Minecraft.Items.get(item.typeId), item.amount, item.data);
