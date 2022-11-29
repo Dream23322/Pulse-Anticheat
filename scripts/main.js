@@ -263,6 +263,10 @@ function checkPlayer() {
             }
         }
 
+        // If a player wants to they can see someones velocity
+        if(player.hasTag("seeVelocity") && !player.velocity.x === 0 && !player.velocity.z === 0) {
+            player.tell(`X=${player.velocity.x}, Y=${player.velocity.y}, Z=${player.velocity.z}`);
+        }
         // BadPackets[6] = Checks for moving with no velocity
         if(config.modules.badpackets6.enabled) {
             if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
