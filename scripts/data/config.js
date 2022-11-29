@@ -685,7 +685,23 @@ export default
             "minVelocity": 0.001,
             "punishment": "none",
             "minVlbeforePunishment": 100
+        },
+        "chatFilter": {
+            "enabled": true,
         }
+    },
+    "chatFilterData": {
+        "curseWords": [
+            "f u c k",
+            "sh!t", 
+            "dick",
+            "d1ck",
+            "a$$hole",
+            "wanker",
+            "t-w-a-t",
+            "t w a t",
+            "s h i t"
+        ]
     },
     "itemLists": {
         "spawnEggs": true,
