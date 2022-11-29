@@ -8,7 +8,7 @@ import { mainGui, playerSettingsMenuSelected } from "./features/ui.js";
 
 const World = Minecraft.world;
 
-if(config.debug === true) console.warn(`${new Date()} | Im not a twat and this actually worked :sunglasses:`);
+if(config.debug === true) console.warn(`${new Date()} | Im not a t-w-a-t and this actually worked :sunglasses:`);
 
 World.events.beforeChat.subscribe(msg => {
     const message = msg.message.toLowerCase();
@@ -349,6 +349,7 @@ function checkPlayer() {
             if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
             player.lastCPS = player.cps;
         }
+
 		// BadPackets[4] = checks for invalid selected slot
         if(config.modules.badpackets4.enabled && player.selectedSlot < 0 || player.selectedSlot > 8) {
             flag(player, "BadPackets", "4", "Exploit", "selectedSlot", `${player.selectedSlot}`);
@@ -377,7 +378,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
         player.blocksPlaced++;
 
         if(blocksPlaced.player > 1)
-            flag(player, "Scaffold", "A", "Placement", `${blocksPlaced}`, false, false);
+            flag(player, "Scaffold", "A", "Placement", "blocks-placed", `${blocksPlaced}`, true);
             // Stops block Placement
             blockPlace.cancel = true;
     }
@@ -385,13 +386,13 @@ World.events.blockPlace.subscribe((blockPlace) => {
     //Scaffold/B = checks for placing a block and attacking at the same time
     if(config.modules.scaffoldB.enabled && player.hasTag("left")) {
         if(blockPlace.player)
-            flag(player, "Scaffold", "B", "Placement", false, false, false);
+            flag(player, "Scaffold", "B", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
 
     }
     //Scaffold/B (2) = checks for placing a block and attacking at the same time
     if(config.modules.scaffoldB.enabled && player.hasTag("left") && player.hasTag("right")) {
-        flag(player, "Scaffold", "B", "Placement", false, false, false);
+        flag(player, "Scaffold", "B", "Placement", undefined, undefined, true);
     }
     
     //Scaffold/C = checks for placing a block and going very fast at the same time
@@ -399,7 +400,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
         if(playerSpeed >= config.modules.scaffoldC.speed) {
             try{
                 player.runCommand("testfor @s[m=!c]");
-                flag(player, "Scaffold", "C", "Placement", `speed=${playerSpeed}`, false, false);
+                flag(player, "Scaffold", "C", "Placement", "speed", playerSpeed, true);
                 blockPlace.cancel = true;
             } catch {}
         }
@@ -407,7 +408,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
     // Scaffold/D = placing a block while using an item
     if(config.modules.scaffoldD.enabled) {
         if(player.hasTag("right") && blockPlace.player)
-            flag(player, "Scaffold", "D", "Placement", false, false, false);
+            flag(player, "Scaffold", "D", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
     }
     
@@ -415,14 +416,14 @@ World.events.blockPlace.subscribe((blockPlace) => {
     if(blockPlace.player) {
         if(config.modules.scaffoldE.enabled && player.hasTag("left")) {
             if(diff >= config.modules.scaffoldE.maxRotationDiff)
-                flag(player, "Scaffold", "E", "Placement", false, false, false)
+                flag(player, "Scaffold", "E", "Placement", undefined, undefined, true)
         }
     
     }
     //Scaffold/F
     if(blockPlace.player && !player.hasTag("left")) {
         if(!player.hasTag("left"))
-            flag(player, "Scaffold", "F", "Placement", false, false, false)
+            flag(player, "Scaffold", "F", "Placement", undefined, undefined, true)
     }
 
 
@@ -817,7 +818,7 @@ World.events.entityHit.subscribe((entityHit) => {
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
             if(config.modules.killauraE.entities.includes(entity.typeId)) {
-                flag(player, "Kilaura", "E", "Combat", `Entity=${entity.typeId}`)
+                flag(player, "Killaura", "E", "Combat", "InvalidEntity", entity.typeId, true)
             }
         }
     }
@@ -854,7 +855,7 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
         player.lastThrow = Date.now();
     }
 
-    // Fastuse/B = Checks for eating fast
+    /* Fastuse/B = Checks for eating fast
     if(config.modules.fastuseB.enabled) {
         if(config.modules.fastuseB.items.includes(item.typeId)) {
             const startTime = Date.now()
@@ -867,6 +868,7 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
             }
         }
     }
+    */
     // patch a bypass for the freeze system
     if(item.typeId === "minecraft:milk_bucket" && player.hasTag("freeze"))
         beforeItemUse.cancel = true;
