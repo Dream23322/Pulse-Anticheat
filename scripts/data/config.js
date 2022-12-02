@@ -572,7 +572,9 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.33,
+            "speed": 0.50,
+            "checkForSprint": false,
+            "checkForJump": true,
             "punishment": "ban",
             "punishmentLength": "12h",
             "minVlbeforePunishment": 50 
