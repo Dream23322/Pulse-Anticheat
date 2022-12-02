@@ -367,7 +367,7 @@ function checkPlayer() {
 
         // Speed/A = Checks for unaturall speed
         if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op")) {
-            if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed))
+            if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("jump") || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("sprint"))
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
         }
         // Autoclicker/A = checks for high CPS
