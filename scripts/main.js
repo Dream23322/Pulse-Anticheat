@@ -291,6 +291,7 @@ function checkPlayer() {
         if(player.hasTag("seeVelocity") && !player.velocity.x === 0 && !player.velocity.z === 0) {
             player.tell(`X=${player.velocity.x}, Y=${player.velocity.y}, Z=${player.velocity.z}`);
         }
+
         // BadPackets[6] = Checks for moving with no velocity
         if(config.modules.badpackets6.enabled) {
             if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
@@ -381,7 +382,7 @@ function checkPlayer() {
         // Autoclicker/B = checks for similar cps
         if(config.modules.autoclickerB.enabled) {
             player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            player.runCommandAsync(`tell @a[tag=seeCPS] title ${player}'s CPS=${player.cps}`);
+            player.runCommandAsync(`tell @a[tag=seeCPS] ${player}'s CPS=${player.cps}`);
             let cpsDiff = Math.abs(player.cps - player.lastCPS);
             if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
             player.lastCPS = player.cps;
@@ -567,7 +568,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
         flag(player, "CommandBlockExploit","F", "Exploit", "block", item.typeId, undefined, undefined, player.selectedSlot);
         beforeItemUseOn.cancel = true;
     }
-    // Anti-Grief/A = stops the use of flint and steel
+    /* Anti-Grief/A = stops the use of flint and steel
     if(config.modules.antigriefA.enabled) {
         if(config.modules.antigriefA.item.includes(item.typeId)) {
             flag(player, "AntiGrief", "A", "Misc", "item", item.typeId, false);
@@ -575,6 +576,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
             player.runCommand(`clear @s ${item.typeId}` );
         }
     }
+    */
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
