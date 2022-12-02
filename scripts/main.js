@@ -422,8 +422,8 @@ World.events.blockPlace.subscribe((blockPlace) => {
     }
 
     //Scaffold/B = checks for placing a block and attacking at the same time
-    if(config.modules.scaffoldB.enabled && player.hasTag("left")) {
-        if(blockPlace.player)
+    if(config.modules.scaffoldB.enabled) {
+        if(blockPlace.player && player.hasTag("left"))
             flag(player, "Scaffold", "B", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
 
@@ -443,13 +443,13 @@ World.events.blockPlace.subscribe((blockPlace) => {
             } catch {}
         }
     }
-    // Scaffold/D = placing a block while using an item
+    /*/ Scaffold/D = placing a block while using an item
     if(config.modules.scaffoldD.enabled) {
         if(player.hasTag("right") && blockPlace.player)
             flag(player, "Scaffold", "D", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
     }
-    
+    */
     //Scaffold/E = Checks for large changed in rotation
     if(blockPlace.player) {
         if(config.modules.scaffoldE.enabled && player.hasTag("left")) {
@@ -569,7 +569,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
         beforeItemUseOn.cancel = true;
     }
     /* Anti-Grief/A = stops the use of flint and steel
-    if(config.modules.antigriefA.enabled) {
+    if(config.modules.antigriefA.enabled) { 
         if(config.modules.antigriefA.item.includes(item.typeId)) {
             flag(player, "AntiGrief", "A", "Misc", "item", item.typeId, false);
             beforeItemUseOn.cancel = true;
