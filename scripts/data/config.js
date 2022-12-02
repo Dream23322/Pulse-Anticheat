@@ -572,7 +572,7 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.50,
+            "speed": 0.35,
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "ban",
