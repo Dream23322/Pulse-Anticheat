@@ -159,9 +159,32 @@ function checkPlayer() {
                 flag(player, "IllegalItems", "C", "Exploit", "stack", item.amount, undefined, undefined, i);
                 
             // Illegalitems/D = additional item clearing check
-            if(config.modules.illegalitemsD.enabled && config.itemLists.items_very_illegal.includes(item.typeId))
-                flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
+            if(config.modules.illegalitemsD.enabled === true) {
+                if(config.itemLists.items_very_illegal.includes(item.typeId)) flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
 
+                // semi illegal items
+                if(!player.hasTag("op")) {
+                    let flagPlayer = false;
+                    // patch element blocks
+                    if(config.itemLists.elements && item.typeId.startsWith("minecraft:element_"))
+                        flagPlayer = true;
+
+                    // patch spawn eggs
+                    if(config.itemLists.spawnEggs && item.typeId.endsWith("_spawn_egg"))
+                        flagPlayer = true;
+
+                    if(config.itemLists.items_semi_illegal.includes(item.typeId) || flagPlayer === true) {
+                        const checkGmc = World.getPlayers({
+                            excludeGameModes: [Minecraft.GameMode.creative],
+                            name: player.name
+                        });
+
+                        if([...checkGmc].length !== 0) {
+                            flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, player.selectedSlot);
+                        }
+                    }
+                }
+            }
             // CommandBlockExploit/H = clear items
             if(config.modules.commandblockexploitH.enabled && config.itemLists.cbe_items.includes(item.typeId))
                 flag(player, "CommandBlockExploit", "H", "Exploit", "item", item.typeId, undefined, undefined, i);
@@ -178,7 +201,7 @@ function checkPlayer() {
 
             // Anti-Shulker/A = Checks for shulkers
             if(config.modules.antishulkerA.enabled && config.itemLists.antiBypassItems.includes(item.typeId) && config.modules.antishulkerA.antiBypass === true || config.modules.antishulkerA.normalShulkers.includes(item.typeId)) {
-                flag(player, "IllegalItems", "D", "Exploit", "item", item.typeId, undefined, undefined, i);
+                flag(player, "Antishulker", "A", "Exploit", "item", item.typeId, undefined, undefined, i);
                 player.runCommandAsync(`clear ${player} ${item.typeId}`);
             }
 
@@ -382,7 +405,7 @@ function checkPlayer() {
 World.events.blockPlace.subscribe((blockPlace) => {
     const block = blockPlace.block;
     const player = blockPlace.player;
-    const diff = Math.abs(data.lastYaw - player.getLocation().getYaw())
+    
     
     if(config.debug === true) console.warn(`${player.nameTag} has placed ${block.typeId}.`);
 
@@ -435,7 +458,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
     
     }
     //Scaffold/F
-    if(blockPlace.player && !player.hasTag("left")) {
+    if(blockPlace.player && !player.hasTag("right")) {
         if(!player.hasTag("left"))
             flag(player, "Scaffold", "F", "Placement", undefined, undefined, true)
     }
@@ -547,7 +570,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     // Anti-Grief/A = stops the use of flint and steel
     if(config.modules.antigriefA.enabled) {
         if(config.modules.antigriefA.item.includes(item.typeId)) {
-            flag(player, "AntiGrief", "B", "Misc", "item", item.typeId, true);
+            flag(player, "AntiGrief", "A", "Misc", "item", item.typeId, false);
             beforeItemUseOn.cancel = true;
             player.runCommand(`clear @s ${item.typeId}` );
         }
@@ -555,7 +578,7 @@ World.events.beforeItemUseOn.subscribe((beforeItemUseOn) => {
     // Anti-Grief/B = stops people using explosives of any kind
     if(config.modules.antigriefB.enabled) {
         if(config.itemLists.antiGriefItems.includes(item.typeId) && !config.modules.antigriefB.exculsions.includes(item.typeId)) {
-            flag(player, "AntiGrief", "B", "Misc", "item", item.typeId, true);
+            flag(player, "AntiGrief", "B", "Misc", "item", item.typeId, false);
             beforeItemUseOn.cancel = true;
             player.runCommand(`clear @s ${item.typeId}` );
         }
