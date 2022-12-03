@@ -292,6 +292,11 @@ function checkPlayer() {
             player.tell(`X=${player.velocity.x}, Y=${player.velocity.y}, Z=${player.velocity.z}`);
         }
 
+        // Finds when a player was last on the ground so we can tp them back to that point in some checks
+        if(player.hasTag("ground")) {
+            const lastLocationOnGround = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+        }
+
         // BadPackets[6] = Checks for moving with no velocity
         if(config.modules.badpackets6.enabled) {
             if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
