@@ -689,7 +689,11 @@ export default
             "minVlbeforePunishment": 100
         },
         "chatFilter": {
+            "enabled": true
+        },
+        "longjumpA": {
             "enabled": true,
+            "Velocity": 10
         }
     },
     "chatFilterData": {
