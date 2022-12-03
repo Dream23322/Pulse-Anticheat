@@ -320,13 +320,13 @@ function checkPlayer() {
 
         // Movement/C = Checks for the weird TP like speed movement
         if(config.modules.movementC.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-            const position1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
-            if(playerSpeed === 0 || playerSpeed === 0.1) {
-                const position2 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+            const position1 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+            Minecraft.system.run(() => {
+                const position2 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
                 const distance = Math.abs(position1 - position2);
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
                 flag(player, "movement", "C", "Movement", undefined, undefined, true);
-            }
+            }); 
         }  
         
         // Fly/B = Checks for vertical Fly
