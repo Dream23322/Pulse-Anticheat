@@ -325,9 +325,9 @@ function checkPlayer() {
                 const position2 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
                 const distance = Math.abs(position1 - position2);
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
-                flag(player, "movement", "C", "Movement", undefined, undefined, true);
+                    flag(player, "movement", "C", "Movement", undefined, undefined, true);
             }); 
-        }  
+        } 
         
         // Fly/B = Checks for vertical Fly
         if(config.modules.flyB.enabled) {
