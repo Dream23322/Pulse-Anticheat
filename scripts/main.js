@@ -344,7 +344,7 @@ function checkPlayer() {
         }
 
         //Longjump/A = Checks for crazy jumping
-        if(config.modules.flyC.enabled && !player.hasTag("op")) {
+        if(config.modules.longjumpA.enabled && !player.hasTag("op")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const makeYVelocity1 = Math.abs(player.velocity.x + player.velocity.z)
@@ -354,7 +354,7 @@ function checkPlayer() {
                 flag(player, "Longjump", "A", "Movement", undefined, undefined, true);
                 player.runCommandAsync(`tp ${player.name} ${lastLocationOnGround}`);
             }
-        }         
+        }
 
         // Fly/A = Checks for airwalk cheats
         if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
