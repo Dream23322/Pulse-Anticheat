@@ -356,6 +356,8 @@ function checkPlayer() {
             }
         }
 
+
+
         // Fly/A = Checks for airwalk cheats
         if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             
@@ -387,28 +389,7 @@ function checkPlayer() {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("jump") || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("sprint"))
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
         }
-        // Autoclicker/A = checks for high CPS
-        if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
-            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
-            player.firstAttack = Date.now();
-            player.cps = 0;
-        }
-
-        // Autoclicker/B = checks for similar cps
-        if(config.modules.autoclickerB.enabled) {
-            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
-            player.runCommandAsync(`tell @a[tag=seeCPS] ${player}'s CPS=${player.cps}`);
-            let cpsDiff = Math.abs(player.cps - player.lastCPS);
-            if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
-            player.lastCPS = player.cps;
-        }
-
-		// BadPackets[4] = checks for invalid selected slot
-        if(config.modules.badpackets4.enabled && player.selectedSlot < 0 || player.selectedSlot > 8) {
-            flag(player, "BadPackets", "4", "Exploit", "selectedSlot", `${player.selectedSlot}`);
-            player.selectedSlot = 0;
-        }
+        
     
         } catch (error) {
             console.warn(error, error.stack);
@@ -443,12 +424,7 @@ World.events.blockPlace.subscribe((blockPlace) => {
             flag(player, "Scaffold", "B", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
 
-    }
-    //Scaffold/B (2) = checks for placing a block and attacking at the same time
-    if(config.modules.scaffoldB.enabled && player.hasTag("left") && player.hasTag("right")) {
-        flag(player, "Scaffold", "B", "Placement", undefined, undefined, true);
-    }
-    
+    }    
     //Scaffold/C = checks for placing a block and going very fast at the same time
     if(config.modules.scaffoldC.enabled && !player.hasTag("op")) {
         if(playerSpeed >= config.modules.scaffoldC.speed) {
@@ -459,26 +435,16 @@ World.events.blockPlace.subscribe((blockPlace) => {
             } catch {}
         }
     }
-    /*/ Scaffold/D = placing a block while using an item
+
+    //Scaffold/D = Checks for invalid slot selection
     if(config.modules.scaffoldD.enabled) {
-        if(player.hasTag("right") && blockPlace.player)
+        if(!blockPlace.Item.includes(item.typeId)) {
             flag(player, "Scaffold", "D", "Placement", undefined, undefined, true);
             blockPlace.cancel = true;
-    }
-    */
-    //Scaffold/E = Checks for large changed in rotation
-    if(blockPlace.player) {
-        if(config.modules.scaffoldE.enabled && player.hasTag("left")) {
-            if(diff >= config.modules.scaffoldE.maxRotationDiff)
-                flag(player, "Scaffold", "E", "Placement", undefined, undefined, true)
         }
+    }
     
-    }
-    //Scaffold/F
-    if(blockPlace.player && !player.hasTag("right")) {
-        if(!player.hasTag("left"))
-            flag(player, "Scaffold", "F", "Placement", undefined, undefined, true)
-    }
+    
 
 
     
@@ -527,6 +493,25 @@ World.events.blockPlace.subscribe((blockPlace) => {
             }
         });
     }
+
+    // Recent Scythe Update, Credit to MrDiamond64 / USSR
+    if(config.modules.commandblockexploitH.enabled === true && block.typeId === "minecraft:hopper") {
+        const pos1 = new Minecraft.BlockLocation(block.location.x + 2, block.location.y + 2, block.location.z + 2);
+        const pos2 = new Minecraft.BlockLocation(block.location.x - 2, block.location.y - 2, block.location.z - 2);
+
+        let foundDispenser = false;
+        pos1.blocksBetween(pos2).some((block) => {
+            const blockType = player.dimension.getBlock(block);
+            if(blockType.typeId !== "minecraft:dispenser") return;
+
+            blockType.setType(Minecraft.MinecraftBlockTypes.air);
+            foundDispenser = true;
+        });
+
+        if(foundDispenser === true)
+            player.dimension.getBlock(new Minecraft.BlockLocation(block.location.x, block.location.y, block.location.z))
+                .setType(Minecraft.MinecraftBlockTypes.air);
+    }
 });
 
 World.events.blockBreak.subscribe((blockBreak) => {
@@ -545,7 +530,7 @@ World.events.blockBreak.subscribe((blockBreak) => {
 
             // killing all the items it drops
             const droppedItems = dimension.getEntities({
-                location: block.location,
+                location: new Minecraft.Location(block.location.x, block.location.y, block.location.z),
                 minDistance: 0,
                 maxDistance: 2,
                 type: "item"
@@ -655,10 +640,12 @@ World.events.playerJoin.subscribe((playerJoin) => {
 
     // declare all needed variables in player
     if(config.modules.badpackets5.enabled) player.badpackets5Ticks = 0;
+    if(config.modules.nukerA.enabled) player.blocksBroken = 0;
     if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
     if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
     if(config.modules.autoclickerA.enabled) player.cps = 0;
     if(config.customcommands.report.enabled) player.reports = [];
+    if(config.modules.killauraC.enabled) player.entitiesHit = [];
 
     // fix a disabler method
     player.nameTag = player.nameTag.replace(/[^A-Za-z0-9_\-() ]/gm, "");
@@ -811,12 +798,14 @@ World.events.entityHit.subscribe((entityHit) => {
             }
         }
 
-        // reach/A = check if a player hits an entity more then 5.1 block away
+
+
+        // reach/A = check if a player hits an entity more than the set distance of blocks away
         if(config.modules.reachA.enabled) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
             if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
-
+            if(player.hasTag("seeReach")) player.runCommand(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`)
             if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
                 // we ignore gmc players as they get increased reach
                 try {
@@ -873,7 +862,7 @@ World.events.entityHit.subscribe((entityHit) => {
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
             if(config.modules.killauraE.entities.includes(entity.typeId)) {
-                flag(player, "Killaura", "E", "Combat", "InvalidEntity", entity.typeId, true)
+                flag(player, "Killaura", "E", "Combat", "invalidEntity", entity.typeId, true)
             }
         }
     }
@@ -980,9 +969,11 @@ checkPlayer();
 if([...World.getPlayers()].length >= 1) {
     for(const player of World.getPlayers()) {
         if(config.modules.badpackets5.enabled) player.badpackets5Ticks = 0;
+        if(config.modules.nukerA.enabled) player.blocksBroken = 0;
         if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
-        if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
+        if(config.modules.fastuseA.enabled) player.lastThrow = Date.now() - 200;
         if(config.modules.autoclickerA.enabled) player.cps = 0;
+        if(config.modules.killauraC.enabled) player.entitiesHit = [];
         if(config.customcommands.report.enabled) player.reports = [];
     }
 }
