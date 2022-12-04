@@ -692,9 +692,14 @@ export default
             "enabled": true
         },
         "longjumpA": {
-            "enabled": true,
+            "enabled": false,
             "Velocity": 10
-        }
+        },
+        "badenchantsE": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 1
+        },
     },
     "chatFilterData": {
         "curseWords": [
