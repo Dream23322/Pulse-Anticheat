@@ -6,10 +6,13 @@ function checks/others
 function checks/killaura
 function checks/killaura2
 
+#runs protections
+execute @a[type=player]~ ~ ~ function pulse/protection/systems/op
+
 # Specific criteria checks
 execute @s[type=player,tag=isBanned,scores={gametestapi=..0}] ~~~ function checks/ban
 
-tag @a[scores={killauravl3..}] add killauraBan
+tag @a[scores={killauravl5..}] add killauraBan
 
 # Optional checks
 execute @s[type=player,tag=!op,m=a,scores={gma=1..}] ~~~ function checks/optional/gamemodeA
