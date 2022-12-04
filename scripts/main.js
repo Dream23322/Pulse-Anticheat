@@ -146,6 +146,7 @@ function checkPlayer() {
         if(config.modules.noslowA.enabled && playerSpeed >= config.modules.noslowA.speed && playerSpeed <= config.modules.noslowA.maxSpeed) {
             if(!player.getEffect(Minecraft.MinecraftEffectTypes.speed) && player.hasTag('moving') && player.hasTag('right') && player.hasTag('ground') && !player.hasTag('jump') && !player.hasTag('gliding') && !player.hasTag('swimming') && !player.hasTag("trident") && getScore(player, "right", 0) >= 5) {
                 flag(player, "NoSlow", "A", "Movement", "speed", playerSpeed, true);
+                beforeItemUse.cancel = true;
             }
         }
 
@@ -861,8 +862,8 @@ World.events.entityHit.subscribe((entityHit) => {
 
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
-            if(config.modules.killauraE.entities.includes(entity.typeId)) {
-                flag(player, "Killaura", "E", "Combat", "invalidEntity", entity.typeId, true)
+            if("minecraft:xp_orb".includes(entity.typeId) || "minecraft:arrow".includes(entity.typeId) || "minecraft:xp_bottle".includes(entity.typeId)) {
+                flag(player, "Killaura", "E", "Combat", "invalidEntity", entity.typeId, true);
             }
         }
     }
