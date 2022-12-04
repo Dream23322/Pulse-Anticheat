@@ -391,7 +391,28 @@ function checkPlayer() {
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
         }
         
-    
+        // Autoclicker/A = checks for high CPS
+        if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
+            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+            if(player.cps > config.modules.autoclickerA.maxCPS) flag(player, "Autoclicker", "A", "Combat", "CPS", player.cps);
+            player.firstAttack = Date.now();
+            player.cps = 0;
+        }
+
+        // Autoclicker/B = checks for similar cps
+        if(config.modules.autoclickerB.enabled) {
+            player.cps = player.cps / ((Date.now() - player.firstAttack) / 1000);
+            player.runCommandAsync(`tell @a[tag=seeCPS] ${player}'s CPS=${player.cps}`);
+            let cpsDiff = Math.abs(player.cps - player.lastCPS);
+            if(player.cps > config.modules.autoclickerB.minCPS && cpsDiff > config.modules.autoclickerB.minCpsDiff && cpsDiff < config.modules.autoclickerB.maxCpsDiff) flag(player, "AutoClicker", "B", "Combat", "CPS", `${player.cps},last_cps=${player.lastCPS}`);
+            player.lastCPS = player.cps;
+        }
+
+		// BadPackets[4] = checks for invalid selected slot
+        if(config.modules.badpackets4.enabled && player.selectedSlot < 0 || player.selectedSlot > 8) {
+            flag(player, "BadPackets", "4", "Exploit", "selectedSlot", `${player.selectedSlot}`);
+            player.selectedSlot = 0;
+        }    
         } catch (error) {
             console.warn(error, error.stack);
             if(player.hasTag("errorlogger")) player.tell(`§r§6[§cPulse§6]§r There was an error while running the tick event. Please forward this message to https://discord.gg/9m9TbgJ973.\n-------------------------\n${String(error).replace(/"|\\/g, "")}\n${error.stack || "\n"}-------------------------`);
