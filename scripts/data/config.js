@@ -572,7 +572,7 @@ export default
         },
         "speedA": {
             "enabled": true,
-            "speed": 0.6475837678752038,
+            "speed": 1.6475837678752038235,
             "checkForSprint": false,
             "checkForJump": true,
             "punishment": "ban",
@@ -638,7 +638,7 @@ export default
         "flyA": {
             "enabled": true,
             "punishment": "none", 
-            "speed": 0.30,
+            "speed": 0.3629083745,
             "minVlbeforePunishment": 0
         },
         "flyB": {
