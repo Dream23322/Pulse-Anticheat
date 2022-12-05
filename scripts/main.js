@@ -296,6 +296,7 @@ function checkPlayer() {
         // Finds when a player was last on the ground so we can tp them back to that point in some checks
         if(player.hasTag("ground")) {
             const lastLocationOnGround = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+            const lastYLocationOnGround = player.location.y
         }
 
         // BadPackets[6] = Checks for moving with no velocity
@@ -357,7 +358,18 @@ function checkPlayer() {
             }
         }
 
-
+        //HighJump/a = Checks for jumping above 'config.modules.highjumpA.jumpHeight'
+        if(config.modules.highjumpA.enabled === true) {
+            if(!player.hasTag("ground") && player.hasTag("jump")) {
+                Minecraft.system.run(() => {
+                    let distanceFromGroundToJump = player.location.y
+                    const distance = Math.sqrt(Math.pow(lastYLocationOnGround - distanceFromGroundToJump))
+                    if(distance > config.modules.highjumpA.jumpHeight) {
+                        flag(player, "Highjump", "A", "Movement", "jumpHeight", `${distance}`, true);
+                    }
+                });
+            }
+        }
 
         // Fly/A = Checks for airwalk cheats
         if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
@@ -388,7 +400,7 @@ function checkPlayer() {
         // Speed/A = Checks for unaturall speed
         if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op")) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("jump") || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("sprint"))
-                flag(player, "Speed", "A", "Movement", "speed", playerSpeed, true);
+                flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
         }
         
         // Autoclicker/A = checks for high CPS
@@ -666,6 +678,7 @@ World.events.playerJoin.subscribe((playerJoin) => {
     if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
     if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
     if(config.modules.autoclickerA.enabled) player.cps = 0;
+    if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
     if(config.customcommands.report.enabled) player.reports = [];
     if(config.modules.killauraC.enabled) player.entitiesHit = [];
 
@@ -827,7 +840,7 @@ World.events.entityHit.subscribe((entityHit) => {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
             if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
-            if(player.hasTag("seeReach")) player.runCommand(`${player.name} attacked ${entity.nameTag} with a distance of ${distance}`)
+            
             if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
                 // we ignore gmc players as they get increased reach
                 try {
@@ -995,6 +1008,7 @@ if([...World.getPlayers()].length >= 1) {
         if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
         if(config.modules.fastuseA.enabled) player.lastThrow = Date.now() - 200;
         if(config.modules.autoclickerA.enabled) player.cps = 0;
+        if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
         if(config.modules.killauraC.enabled) player.entitiesHit = [];
         if(config.customcommands.report.enabled) player.reports = [];
     }
