@@ -638,7 +638,7 @@ export default
         "flyA": {
             "enabled": true,
             "punishment": "none", 
-            "speed": 0.3629083745,
+            "speed": 0.41248273,
             "minVlbeforePunishment": 0
         },
         "flyB": {
