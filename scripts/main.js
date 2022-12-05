@@ -293,10 +293,13 @@ function checkPlayer() {
             player.tell(`X=${player.velocity.x}, Y=${player.velocity.y}, Z=${player.velocity.z}`);
         }
 
-        // Finds when a player was last on the ground so we can tp them back to that point in some checks
-        if(player.hasTag("ground")) {
-            const lastLocationOnGround = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+        const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+        const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
+
+        const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+        if(isNotInAir === true) {
             const lastYLocationOnGround = player.location.y
+            const lastLocationOnGround = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
         }
 
         // BadPackets[6] = Checks for moving with no velocity
@@ -314,7 +317,7 @@ function checkPlayer() {
                 player.runCommand("tp @s @s");
             }
         }
-        // Movement/a
+        // Movement/a = checks for unaturall movement
         if(config.modules.movementA.enabled && Math.abs(player.velocity.y).toFixed(4) === "0.1552" && !player.hasTag("attacked") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
@@ -334,7 +337,10 @@ function checkPlayer() {
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
                     flag(player, "movement", "C", "Movement", undefined, undefined, true);
             }); 
-        } 
+        }
+
+        //Criticals/A = Checks for invalid Jumping
+
         
         // Fly/B = Checks for vertical Fly
         if(config.modules.flyB.enabled) {
@@ -354,22 +360,29 @@ function checkPlayer() {
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(player.velocity.y > yVelocity && player.velocity.x > config.modules.longjumpA.Velocity && isNotInAir === false) {
                 flag(player, "Longjump", "A", "Movement", undefined, undefined, true);
-                player.runCommandAsync(`tp ${player.name} ${lastLocationOnGround}`);
             }
         }
 
-        //HighJump/a = Checks for jumping above 'config.modules.highjumpA.jumpHeight'
+        /*/HighJump/a = Checks for jumping above 'config.modules.highjumpA.jumpHeight'
         if(config.modules.highjumpA.enabled === true) {
-            if(!player.hasTag("ground") && player.hasTag("jump")) {
+            if(!player.hasTag("ground")) {
                 Minecraft.system.run(() => {
-                    let distanceFromGroundToJump = player.location.y
+                    const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+                    const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
+            
+                    const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+                    if(isNotInAir === true) {
+                        const lastYLocationOnGround = player.location.y;
+                    }
+                    const distanceFromGroundToJump = player.location.y
                     const distance = Math.sqrt(Math.pow(lastYLocationOnGround - distanceFromGroundToJump))
-                    if(distance > config.modules.highjumpA.jumpHeight) {
+                    if(distance > config.modules.highjumpA.jumpHeight && player.hasTag("jump")) {
                         flag(player, "Highjump", "A", "Movement", "jumpHeight", `${distance}`, true);
                     }
                 });
             }
         }
+        */
 
         // Fly/A = Checks for airwalk cheats
         if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
@@ -819,7 +832,7 @@ World.events.entityHit.subscribe((entityHit) => {
     const entity = entityHit.hitEntity;
     const block = entityHit.hitBlock;
     const player = entityHit.entity;
-
+    
     if(player.typeId !== "minecraft:player") return;
 
     if(typeof entity === "object") {
