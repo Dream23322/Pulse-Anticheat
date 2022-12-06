@@ -700,6 +700,21 @@ export default
             "punishment": "kick",
             "minVlbeforePunishment": 1
         },
+        "highjumpA": {
+            "enabled": true,
+            "punishment": "kick",
+            "jumpHeight": 3,
+            "minVlbeforePunishment": 30
+        },
+        "criticalsA": {
+            "enabled": true
+        },
+        "flyC": {
+            "enabled": true
+        },
+        "jesusA": {
+            "enabled": true
+        }
     },
     "chatFilterData": {
         "curseWords": [
