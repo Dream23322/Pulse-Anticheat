@@ -7,7 +7,7 @@ function checks/killaura
 function checks/killaura2
 
 #runs protections
-execute @a[type=player]~ ~ ~ function pulse/protection/systems/op
+execute @s[type=player] ~~~ function pulse/protection/systems/op
 
 # Specific criteria checks
 execute @s[type=player,tag=isBanned,scores={gametestapi=..0}] ~~~ function checks/ban
