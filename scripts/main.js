@@ -340,6 +340,17 @@ function checkPlayer() {
         }
 
         //Criticals/A = Checks for invalid Jumping
+        if(player.hasTag("ground") && config.modules.criticalsA.enabled === true) {
+            if(player.hasTag("jump")) {
+                flag(player, "Criticals", "A", "Combat", undefined, undefined, false)
+            }
+        }
+
+        //Fly/C = A Minecraft Java style fly check
+
+
+        //Jesus/A = Checks for staying 1 block above water over 2 ticks 
+        
 
         
         // Fly/B = Checks for vertical Fly
