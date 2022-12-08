@@ -333,44 +333,65 @@ function checkPlayer() {
             const position1 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
             Minecraft.system.run(() => {
                 const position2 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
-                const distance = Math.abs(position1 - position2);
+                const distance = Math.sqrt(Math.abs(position1 - position2));
                 if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
                     flag(player, "movement", "C", "Movement", undefined, undefined, true);
             }); 
         }
 
-        //Criticals/A = Checks for invalid Jumping
-        if(player.hasTag("ground") && config.modules.criticalsA.enabled === true) {
-            if(player.hasTag("jump")) {
-                flag(player, "Criticals", "A", "Combat", undefined, undefined, false)
-            }
-        }
 
-        //Fly/C = A Minecraft Java style fly check
+
+        //Fly/C = A Minecraft Java style fly check (ish)
+        if(config.modules.flyC.enabled) {
+            const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+            const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
+            const velocity1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
+            const velocity2 = Math.abs(velocity1 / 3);
+            const velocity3 = Math.abs(velocity1 / 2);
+            const velocity4 = Math.abs(velocity2 + velocity3);
+            const velocity5 = Math.abs((player.velocity.x + player.velocity.z) / 2);
+            const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+            if(isNotInAir === false && velocity4 > config.modules.flyC.velocity && velocity5 > config.modules.flyC.hVelocity) {
+                flag(player, "Fly", "C", "Movement", "velocity", velocity4, true);
+            }
+
+        }
 
 
         //Jesus/A = Checks for staying 1 block above water over 2 ticks 
-        
+        if(config.modules.jesusA.enabled && !player.hasTag("jump") && !player.hasTag("swimming")) {
+            const findaircoords = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+            const findwatercoords = new Minecraft.BlockLocation(player.location.x, player.location.y - 1, player.location.z);
+            const isInAir = findaircoords.blocksBetween(findaircoords).some((block) => player.dimension.getBlock(block).typeId == "minecraft:air");
+            const hasWaterBelow = findwatercoords.blocksBetween(findwatercoords).some((block) => player.dimension.getBlock(block).typeId == "minecraft:water");
+            if(isInAir === true && hasWaterBelow === true) {
+                flag(player, "Jesus", "A", "Movement", undefined, undefined, false);
+                player.runCommand("tp @s ~ ~-1 ~");
+            }
+        }
 
         
         // Fly/B = Checks for vertical Fly
         if(config.modules.flyB.enabled) {
-            if(player.velocity.x === 0 && player.velocity.z === 0) {
-                if(player.velocity.y > config.modules.flyB.minVelocity && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-                    flag(player, "Fly", "B", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
-                }
-            }
+            const pos1 = new Minecraft.BlockLocation(player.location.x, player.location.y + 2, player.location.z);
+            const pos2 = new Minecraft.BlockLocation(player.location.x, player.location.y - 2, player.location.z);
+            const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+            const hVelocity = Math.abs((player.velocity.x + player.velocity.z) / 2);
+            if(isNotInAir === false && player.velocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+                flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(player.velocity.y), true);
+            } 
         }
+        
 
-        //Longjump/A = Checks for crazy jumping
-        if(config.modules.longjumpA.enabled && !player.hasTag("op")) {
+        //Fly/D = Checks for fly like velocity
+        if(config.modules.flyD.enabled && !player.hasTag("op")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const makeYVelocity1 = Math.abs(player.velocity.x + player.velocity.z)
             const yVelocity = Math.abs(makeYVelocity1 / 2)
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
-            if(player.velocity.y > yVelocity && player.velocity.x > config.modules.longjumpA.Velocity && isNotInAir === false) {
-                flag(player, "Longjump", "A", "Movement", undefined, undefined, true);
+            if(player.velocity.y > yVelocity && player.velocity.x > config.modules.flyD.Velocity && isNotInAir === false) {
+                flag(player, "Fly", "D", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
             }
         }
 
@@ -876,7 +897,7 @@ World.events.entityHit.subscribe((entityHit) => {
             }
         }
 
-        if(config.modules.reachA.enabled === true) {
+        if(config.modules.reachA.enabled === true && player.hasTag("reported")) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
             if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
