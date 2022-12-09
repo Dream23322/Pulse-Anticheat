@@ -717,7 +717,7 @@ export default
             "minVlbeforePunishment": 10
         },
         "jesusA": {
-            "enabled": true
+            "enabled": false
         },
         "flyE": {
             "enabled": true,
