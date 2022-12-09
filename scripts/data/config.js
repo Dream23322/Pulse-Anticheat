@@ -638,13 +638,14 @@ export default
         "flyA": {
             "enabled": true,
             "punishment": "none", 
-            "speed": 0.41248273,
+            "speed": 0.55248273,
             "minVlbeforePunishment": 0
         },
         "flyB": {
             "enabled": false,
             "minVelocity": 0.001,
             "punishment": "none",
+            "MaxHVelocity": 0.5234,
             "minVlbeforePunishment": 0
         },
         "antispamA": {
@@ -691,9 +692,11 @@ export default
         "chatFilter": {
             "enabled": true
         },
-        "longjumpA": {
-            "enabled": false,
-            "Velocity": 10
+        "flyD": {
+            "enabled": true,
+            "Velocity": 0.5,
+            "punishment": "ban",
+            "minVlbeforePunishment": 3
         },
         "badenchantsE": {
             "enabled": true,
@@ -706,28 +709,20 @@ export default
             "jumpHeight": 3,
             "minVlbeforePunishment": 30
         },
-        "criticalsA": {
-            "enabled": true
-        },
         "flyC": {
-            "enabled": true
+            "enabled": true,
+            "velocity": 0.4423,
+            "hVelocity": 0.525,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         },
         "jesusA": {
             "enabled": true
+        },
+        "flyE": {
+            "enabled": true,
+            "hVelocity": 0.512
         }
-    },
-    "chatFilterData": {
-        "curseWords": [
-            "f u c k",
-            "sh!t", 
-            "dick",
-            "d1ck",
-            "a$$hole",
-            "wanker",
-            "t-w-a-t",
-            "t w a t",
-            "s h i t"
-        ]
     },
     "itemLists": {
         "spawnEggs": true,
