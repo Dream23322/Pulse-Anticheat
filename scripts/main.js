@@ -381,10 +381,10 @@ function checkPlayer() {
                 flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(player.velocity.y), true);
             } 
         }
-        
+
 
         //Fly/D = Checks for fly like velocity
-        if(config.modules.flyD.enabled && !player.hasTag("op")) {
+        if(config.modules.flyD.enabled && !player.hasTag("op") && !player.hasTag("jump")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const makeYVelocity1 = Math.abs(player.velocity.x + player.velocity.z)
@@ -392,6 +392,19 @@ function checkPlayer() {
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(player.velocity.y > yVelocity && player.velocity.x > config.modules.flyD.Velocity && isNotInAir === false) {
                 flag(player, "Fly", "D", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
+            }
+        }
+
+        // Fly/E = Checks for being in air but not falling
+        if(config.modules.flyE.enabled) {
+            if(player.velocity.y === 0) {
+                const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
+                const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
+                const findHVelocity = Math.abs((player.velocity.x + player.velocity.z) / 2);
+                const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+                if(isNotInAir === false && findHVelocity > config.modules.flyE.hVelocity) {
+                    flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocity.y).toFixed(4), false);
+                }          
             }
         }
 
