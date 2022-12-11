@@ -460,6 +460,12 @@ function checkPlayer() {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("jump") || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("sprint"))
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
         }
+
+        /*/ Speed/B = Checks for BHop
+        if(config.modules.speedB.enabled && !player.hasTag("jump")) {
+            
+        }
+        */
         
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
@@ -485,7 +491,7 @@ function checkPlayer() {
         }    
         } catch (error) {
             console.warn(error, error.stack);
-            if(player.hasTag("errorlogger")) player.tell(`§r§6[§cPulse§6]§r There was an error while running the tick event. Please forward this message to https://discord.gg/9m9TbgJ973.\n-------------------------\n${String(error).replace(/"|\\/g, "")}\n${error.stack || "\n"}-------------------------`);
+            if(player.hasTag("errorlogger")) player.tell(`§r§6[§cPulse§6]§r There was an error while running the tick event.`);
         }
     }
     checkPlayer();
@@ -989,7 +995,8 @@ World.events.beforeItemUse.subscribe((beforeItemUse) => {
     if(config.modules.fastuseA.enabled === true) {
         const lastThrowTime = Date.now() - player.lastThrow;
         if(lastThrowTime < 184) console.warn("detected fastthrow4", lastThrowTime);
-        if(lastThrowTime < config.modules.fastuseA.use_delay) {
+        console.warn(lastThrowTime);
+        if(lastThrowTime > config.modules.fastuseA.min_use_delay && lastThrowTime < config.modules.fastuseA.use_delay) {
             flag(player, "FastUse", "A", "Combat", "lastThrowTime", lastThrowTime);
             beforeItemUse.cancel = true;
         }
