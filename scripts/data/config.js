@@ -523,20 +523,9 @@ export default
         },
         "fastuseA": {
             "enabled": true,
-            "use_delay": 170,
+            "min_use_delay": 10,
+            "max_use_delay": 130,
             "punishment": "none",
-            "minVlbeforePunishment": 0
-        },
-        "fastuseB": {
-            "enabled": true,
-            "min_eat_delay": 20,
-            "punishment": "none",
-            "items": [
-                "minecraft:apple",
-                "minecraft:golden_apple",
-                "minecraft:enchanted_golden_apple"
-                
-            ],
             "minVlbeforePunishment": 0
         },
         "killauraE": {
