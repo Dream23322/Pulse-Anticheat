@@ -934,7 +934,7 @@ World.events.entityHit.subscribe((entityHit) => {
 
         // badpackets[3] = checks if a player attacks themselves
         // some (bad) hacks use this to bypass anti-movement cheat checks
-        if(config.modules.badpackets3.enabled && entity === player) flag(player, "BadPackets", "3", "Exploit");
+        if(config.modules.badpackets3.enabled && entity.id === player.id) flag(player, "BadPackets", "3", "Exploit");
     
         // check if the player was hit with the UI item, and if so open the UI for that player
         const container = player.getComponent("inventory").container;
