@@ -25,7 +25,7 @@ World.events.beforeChat.subscribe(msg => {
      
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
-        player.tell("§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou have been muted.");
+        player.tell(`§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou are muted! You can appeal this mute at ${config.appeal}`);
     }
 
     // BadPackets/2 = checks for invalid chat message lengths
