@@ -455,11 +455,16 @@ function checkPlayer() {
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
         }
 
-        /*/ Speed/B = Checks for BHop
+        // Jetpack/a = Checks for horion jetpack
         if(config.modules.speedB.enabled && !player.hasTag("jump")) {
-            
+            const velocityCheck1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
+            const velocityCheck2 = Math.abs(velocityCheck1 / 2);
+            const velocityCheck3 = Math.abs(velocityCheck2 / 3);
+            const velocityCheck4 = Math.abs((velocityCheck2 * velocityCheck3) / 2);
+            if(velocityCheck4 > config.modules.jetpackA.velocity) {
+                flag(player, "Jetpack", "A", "Movement", undefined, undefined, false);
+            }
         }
-        */
         
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
