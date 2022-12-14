@@ -710,7 +710,16 @@ export default
         },
         "flyE": {
             "enabled": true,
-            "hVelocity": 0.512
+            "hVelocity": 0.512,
+            "punishment": "ban",
+            "punishmentLength": "7d",
+            "minVlbeforePunishment": 10
+        },
+        "jetpackA": {
+            "enabled": true,
+            "velocity":0.98453,
+            "punishment": "kick",
+            "minVlbeforePunishment": 10
         }
     },
     "itemLists": {
