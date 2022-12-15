@@ -397,7 +397,7 @@ function checkPlayer() {
                 const findHVelocity = Math.abs((player.velocity.x + player.velocity.z) / 2);
                 const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
                 if(isNotInAir === false && findHVelocity > config.modules.flyE.hVelocity) {
-                    flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocity.y).toFixed(4), false);
+                    flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocity.y).toFixed(4), true);
                 }          
             }
         }
@@ -465,6 +465,7 @@ function checkPlayer() {
                 flag(player, "Jetpack", "A", "Movement", undefined, undefined, false);
             }
         }
+        
         
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
@@ -637,6 +638,16 @@ World.events.blockBreak.subscribe((blockBreak) => {
 
             block.setPermutation(blockBreak.brokenBlockPermutation);
         }
+    }
+
+    // Instabreak/A = Checks for breaking unbreakable blocks in survival
+    if(config.modules.instabreakA.enabled === true) {
+        if(config.modules.instabreakA.unbreakable_blocks.includes(blockBreak.brokenBlockPermutation.type.id)) {
+            try {
+                player.runCommand("testfor @s[m=!c]");
+                flag(player, "InstaBreak", "A", "Exploit", "block", blockBreak.brokenBlockPermutation.type.id);
+            } catch {}
+        }   
     }
 
     // liquidinteract/a = checks if a player breaks a liquid source block
