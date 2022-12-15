@@ -470,7 +470,21 @@ function checkPlayer() {
                 flag(player, "Jetpack", "A", "Movement", undefined, undefined, false);
             }
         }
-        
+
+        //Speed/B = Checks for BHop or VHop like cheats
+        if(config.modules.speedB.enabled === true && !player.hasTag("jump")) {
+            const checkForInvalidVelocity = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
+            const checkForInvalidVelocity2 = Math.abs(checkForInvalidVelocity / (player.velocity.x + player.velocity.z));
+            if(config.modules.speedB.velocities.includes(checkForInvalidVelocity2)) {
+                if(config.modules.speedB.checkForHighSpeed === true) {
+                    if(playerSpeed >= config.modules.speedB.speed) {
+                        flag(player, "Speed", "B", "Movement", undefined, undefined, false);
+                    } else {
+                        flag(player, "Speed", "B", "Movement", undefined, undefined, false);
+                    }
+                }
+            }
+        }        
         
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
