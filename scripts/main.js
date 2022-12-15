@@ -26,9 +26,9 @@ World.events.beforeChat.subscribe(msg => {
     if(player.hasTag("isMuted")) {
         msg.cancel = true;
         if(config.appeal === "No Appeal") {
-            player.tell(`§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou are muted! You can appeal this mute at ${config.appeal}`);
-        } else {
             player.tell(`§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou are muted!`);
+        } else {
+            player.tell(`§r§6[§cPulse§6]§r §1§lNOPE! §r§cYou are muted! You can appeal this mute at ${config.appeal}`);
         }
 
     }
@@ -461,7 +461,7 @@ function checkPlayer() {
         }
 
         // Jetpack/a = Checks for horion jetpack
-        if(config.modules.speedB.enabled && !player.hasTag("jump")) {
+        if(config.modules.jetpackA.enabled && !player.hasTag("jump")) {
             const velocityCheck1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
             const velocityCheck2 = Math.abs(velocityCheck1 / 2);
             const velocityCheck3 = Math.abs(velocityCheck2 / 3);
