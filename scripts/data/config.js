@@ -720,6 +720,23 @@ export default
             "velocity":0.98453,
             "punishment": "kick",
             "minVlbeforePunishment": 10
+        },
+        "instabreakA": {
+            "enabled": true,
+            "unbreakable_blocks": [
+                "minecraft:bedrock",
+                "minecraft:end_portal",
+                "minecraft:end_portal_gateway",
+                "minecraft:barrier",
+                "minecraft:command_block",
+                "minecraft:chain_command_block",
+                "minecraft:repeating_command_block",
+                "minecraft:end_gateway",
+                "minecraft:light_block"
+            ],
+            "punishment": "ban",
+            "alsoKick": true,
+            "minVlbeforePunishment": 10
         }
     },
     "itemLists": {
