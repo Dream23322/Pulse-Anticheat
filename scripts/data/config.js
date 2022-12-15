@@ -737,6 +737,16 @@ export default
             "punishment": "ban",
             "alsoKick": true,
             "minVlbeforePunishment": 10
+        },
+        "speedB": {
+            "enabled": true,
+            "velocities": [
+                0.194,
+                0.762,
+                1.94382
+            ],
+            "checkForHighSpeed": true,
+            "speed": 1.5
         }
     },
     "itemLists": {
