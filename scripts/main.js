@@ -339,7 +339,7 @@ function checkPlayer() {
 
 
         //Fly/C = A Minecraft Java style fly check (ish)
-        if(config.modules.flyC.enabled) && !player.hasTag("flying") {
+        if(config.modules.flyC.enabled && !player.hasTag("flying")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const velocity1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
