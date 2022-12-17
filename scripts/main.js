@@ -326,7 +326,7 @@ function checkPlayer() {
         }
 
         // Movement/C = Checks for the weird TP like speed movement
-        if(config.modules.movementC.enabled && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+        if(config.modules.movementC.enabled && !player.hasTag("flying") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
             const position1 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
             Minecraft.system.run(() => {
                 const position2 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
@@ -339,7 +339,7 @@ function checkPlayer() {
 
 
         //Fly/C = A Minecraft Java style fly check (ish)
-        if(config.modules.flyC.enabled) {
+        if(config.modules.flyC.enabled) && !player.hasTag("flying") {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const velocity1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
@@ -356,7 +356,7 @@ function checkPlayer() {
 
 
         //Jesus/A = Checks for staying 1 block above water over 2 ticks 
-        if(config.modules.jesusA.enabled && !player.hasTag("jump") && !player.hasTag("swimming")) {
+        if(config.modules.jesusA.enabled && !player.hasTag("jump") && !player.hasTag("swimming") && !player.hasTag("flying")) {
             const findaircoords = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
             const findwatercoords = new Minecraft.BlockLocation(player.location.x, player.location.y - 1, player.location.z);
             const isInAir = findaircoords.blocksBetween(findaircoords).some((block) => player.dimension.getBlock(block).typeId == "minecraft:air");
@@ -371,7 +371,7 @@ function checkPlayer() {
 
         
         // Fly/B = Checks for vertical Fly
-        if(config.modules.flyB.enabled) {
+        if(config.modules.flyB.enabled && !player.hasTag("flying")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x, player.location.y + 2, player.location.z);
             const pos2 = new Minecraft.BlockLocation(player.location.x, player.location.y - 2, player.location.z);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
@@ -383,7 +383,7 @@ function checkPlayer() {
 
 
         //Fly/D = Checks for fly like velocity
-        if(config.modules.flyD.enabled && !player.hasTag("op") && !player.hasTag("jump")) {
+        if(config.modules.flyD.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("flying")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const makeYVelocity1 = Math.abs(player.velocity.x + player.velocity.z)
@@ -395,7 +395,7 @@ function checkPlayer() {
         }
 
         // Fly/E = Checks for being in air but not falling
-        if(config.modules.flyE.enabled) {
+        if(config.modules.flyE.enabled && !player.hasTag("flying")) {
             if(player.velocity.y === 0) {
                 const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
                 const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
@@ -429,7 +429,7 @@ function checkPlayer() {
         */
 
         // Fly/A = Checks for airwalk cheats
-        if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
+        if(config.modules.flyA.enabled && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving") && !player.hasTag("flying")) {
             
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
@@ -455,24 +455,24 @@ function checkPlayer() {
         }
 
         // Speed/A = Checks for unaturall speed
-        if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op")) {
+        if(config.modules.speedA.enabled && !player.hasTag("attacked") && !player.hasTag("op") && !player.hasTag("flying")) {
             if(playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) || config.modules.speedA.checkForJump === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("jump") || config.modules.speedA.checkForSprint === true && playerSpeed > config.modules.speedA.speed && !player.getEffect(Minecraft.MinecraftEffectTypes.speed) && !player.hasTag("sprint"))
                 flag(player, "Speed", "A", "Movement", "speed", playerSpeed, false);
         }
 
-        // Jetpack/a = Checks for horion jetpack
-        if(config.modules.jetpackA.enabled && !player.hasTag("jump")) {
+        // Speed/C = Checks for VHop
+        if(config.modules.speedC.enabled && !player.hasTag("jump") && !player.hasTag("flying")) {
             const velocityCheck1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
             const velocityCheck2 = Math.abs(velocityCheck1 / 2);
             const velocityCheck3 = Math.abs(velocityCheck2 / 3);
             const velocityCheck4 = Math.abs((velocityCheck2 * velocityCheck3) / 2);
-            if(velocityCheck4 > config.modules.jetpackA.velocity) {
-                flag(player, "Jetpack", "A", "Movement", undefined, undefined, false);
+            if(velocityCheck4 > config.modules.speedC.velocity) {
+                flag(player, "Speed", "C", "Movement", undefined, undefined, false);
             }
         }
 
         //Speed/B = Checks for BHop or VHop like cheats
-        if(config.modules.speedB.enabled === true && !player.hasTag("jump")) {
+        if(config.modules.speedB.enabled === true && !player.hasTag("jump") && !player.hasTag("flying")) {
             const checkForInvalidVelocity = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
             const checkForInvalidVelocity2 = Math.abs(checkForInvalidVelocity / (player.velocity.x + player.velocity.z));
             if(config.modules.speedB.velocities.includes(checkForInvalidVelocity2)) {
@@ -484,7 +484,9 @@ function checkPlayer() {
                     }
                 }
             }
-        }        
+        }
+
+        // 
         
         // Autoclicker/A = checks for high CPS
         if(config.modules.autoclickerA.enabled && player.cps > 0 && Date.now() - player.firstAttack >= config.modules.autoclickerA.checkCPSAfter) {
@@ -1106,7 +1108,7 @@ if([...World.getPlayers()].length >= 1) {
         if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
         if(config.modules.fastuseA.enabled) player.lastThrow = Date.now() - 200;
         if(config.modules.autoclickerA.enabled) player.cps = 0;
-        if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
+        //if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
         if(config.modules.killauraC.enabled) player.entitiesHit = [];
         if(config.customcommands.report.enabled) player.reports = [];
     }
