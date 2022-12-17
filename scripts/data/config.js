@@ -479,7 +479,7 @@ export default
             "minVlbeforePunishment": 15
         },
         "strafeB": {
-            "enabled": true,
+            "enabled": true, 
             "punishment": "none",
             "minVlbeforePunishment": 0 
         },
@@ -502,7 +502,7 @@ export default
         "scaffoldC": {
             "enabled": true,
             "punishment": "kick",
-            "speed": 0.11,
+            "speed": 0.20,
             "minVlbeforePunishment": 5
         },
         "scaffoldD": {
@@ -525,8 +525,8 @@ export default
             "enabled": true,
             "min_use_delay": 10,
             "max_use_delay": 130,
-            "punishment": "none",
-            "minVlbeforePunishment": 0
+            "punishment": "freeze",
+            "minVlbeforePunishment": 1
         },
         "killauraE": {
             "enabled": true,
@@ -564,8 +564,7 @@ export default
             "speed": 1.6475837678752038235,
             "checkForSprint": false,
             "checkForJump": true,
-            "punishment": "ban",
-            "punishmentLength": "12h",
+            "punishment": "freeze",
             "minVlbeforePunishment": 50 
         },
         "movementC": {
@@ -581,14 +580,9 @@ export default
             Having antibypass on will not allow peole without op to have chests or barrels, only use this if you have a 
             Kit-PvP like server.
             */
-            "antiBypass": false,
-            "normalShulkers": "minecraft:shulker_box",
+            "antiBypass": true,
+            "normalShulkers": "minecraft:shulker__box",
             "punishment": "ban",
-            "antiBypassItems": [
-                "minecraft:barrel",
-                "minecraft:chest",
-                "minecraft:trapped_chest"
-            ],
             "punishmentLength": "12h",
             "minVlbeforePunishment": 5
 
@@ -614,25 +608,27 @@ export default
             "item": "minecraft:flint_and_steel"
         },
         "antigriefB": {
-            "enabled": true,
+            "enabled": false,
             "exculsions": [
                 /*
                 if you have any explosives being used on your realm/server add them in the exculsions list
                 do it like this:
                 "minecraft:tnt"
                 */
-               
+               "minecraft:end_crystal"
             ]
         },
         "flyA": {
             "enabled": true,
-            "punishment": "none", 
+            "punishment": "ban", 
             "speed": 0.55248273,
-            "minVlbeforePunishment": 0
+            "alsoKick": false,
+            "punishmentLength": "3d",
+            "minVlbeforePunishment": 10
         },
         "flyB": {
-            "enabled": false,
-            "minVelocity": 0.001,
+            "enabled": true,
+            "minVelocity": 0.53234201,
             "punishment": "none",
             "MaxHVelocity": 0.5234,
             "minVlbeforePunishment": 0
@@ -685,7 +681,8 @@ export default
             "enabled": true,
             "Velocity": 0.5,
             "punishment": "ban",
-            "minVlbeforePunishment": 3
+            "punishmentLength": "5m",
+            "minVlbeforePunishment": 10
         },
         "badenchantsE": {
             "enabled": true,
@@ -715,7 +712,7 @@ export default
             "punishmentLength": "7d",
             "minVlbeforePunishment": 10
         },
-        "jetpackA": {
+        "speedC": {
             "enabled": true,
             "velocity":0.98453,
             "punishment": "kick",
@@ -769,6 +766,11 @@ export default
             "minecraft:tnt",
             "minecraft:end_crystal",
             "minecraft:respawn_anchor"
+        ],
+        "antiBypassItems": [
+            "minecraft:barrel",
+            "minecraft:chest",
+            "minecraft:trapped_chest"
         ],
         "items_semi_illegal": [
             "minecraft:bedrock",
