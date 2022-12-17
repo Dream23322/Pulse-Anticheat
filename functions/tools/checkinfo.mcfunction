@@ -3,13 +3,13 @@ tellraw @s {"rawtext":[{"text":"\n"}]}
 tellraw @s {"rawtext":[{"text":"§aCombat:"}]}
 tellraw @s {"rawtext":[{"text":"§3Autoclicker/A - Checks for high CPS"}]}
 tellraw @s {"rawtext":[{"text":"§3Autoclicker/B - Checks for similar CPS over a few seconds"}]}
-tellraw @s {"rawtext":[{"text":"§3Killaura/A - Checks for attacking a killaura bot}]}
+tellraw @s {"rawtext":[{"text":"§3Killaura/A - Checks for attacking a killaura bot"}]}
 tellraw @s {"rawtext":[{"text":"§3Killaura/B - Checks for attacking without swinging"}]}
 tellraw @s {"rawtext":[{"text":"§3Killaura/C - Checks for hitting more than 2 entities"}]}
 tellraw @s {"rawtext":[{"text":"§3Killaura/D - Checks for hitting while sleeping"}]}
 tellraw @s {"rawtext":[{"text":"§3Killaura/E - Checks for hitting invalid entities"}]}
 tellraw @s {"rawtext":[{"text":"§3Reach/A - Checks for illegal reach"}]}
-tellraw @s {"rawtext":[{"text":"\n"}]}
+tellraw @s {"rawtext":[{"text":"-----------------------------------------------------------------------------------------------------------"}]}
 tellraw @s {"rawtext":[{"text":"§aMovement:"}]}
 tellraw @s {"rawtext":[{"text":"§3Movement/A - Checks for Unatural movement"}]}
 tellraw @s {"rawtext":[{"text":"§3Movement/B - A version of invalid sprint that is good for detecting speed or fly"}]}
@@ -26,7 +26,7 @@ tellraw @s {"rawtext":[{"text":"§3Fly/E - Checks for being in air and not falli
 tellraw @s {"rawtext":[{"text":"§3Speed/A - Checks for high Speed"}]}
 tellraw @s {"rawtext":[{"text":"§3Speed/B - Checks for VHop"}]}
 tellraw @s {"rawtext":[{"text":"§3Speed/C - Checks for BHop"}]}
-tellraw @s {"rawtext":[{"text":"\n"}]}
+tellraw @s {"rawtext":[{"text":"-----------------------------------------------------------------------------------------------------------"}]}
 tellraw @s {"rawtext":[{"text":"§aOther:"}]}
 tellraw @s {"rawtext":[{"text":"§3AntiKB/A - Checks for weird velocity"}]}
 tellraw @s {"rawtext":[{"text":"§3BadPackets(1) - Checks for invalid Head Rotations"}]}
@@ -48,7 +48,7 @@ tellraw @s {"rawtext":[{"text":"§3Nuker - Checks for breaking more than 8 block
 tellraw @s {"rawtext":[{"text":"§3Namespoof - Checks for spoofed names"}]}
 tellraw @s {"rawtext":[{"text":"§3Auto Shield/Totem - Checks for adding a totem/shield while moving"}]}
 tellraw @s {"rawtext":[{"text":"§3Liquid Interact - Checks for breaking water or lava"}]}
-tellraw @s {"rawtext":[{"text":"\n"}]}
+tellraw @s {"rawtext":[{"text":"-----------------------------------------------------------------------------------------------------------"}]}
 tellraw @s {"rawtext":[{"text":"Placement:"}]}
 tellraw @s {"rawtext":[{"text":"§3Scaffold/A - Checks for placing more than 3 block in a tick"}]}
 tellraw @s {"rawtext":[{"text":"§3Scaffold/B - Checks for placing and attacking at the same time"}]}
