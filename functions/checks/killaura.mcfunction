@@ -4,4 +4,4 @@ scoreboard players add @s aura_timer 1
 scoreboard players add @s[scores={aura_timer=..500}] aura_timer 1
 execute @s[scores={aura_timer=500..}] ~~~ summon pulse:killaura ~ ~4 ~3
 execute @s[scores={aura_timer=500..}] ~~~ summon pulse:killaura ~ ~4 ~2
-execute @s[scores={aura_timer=1000..}] ~~~ scoreboard players set @s aura_timer 0
+execute @s[scores={aura_timer=500..}] ~~~ scoreboard players set @s aura_timer 0
