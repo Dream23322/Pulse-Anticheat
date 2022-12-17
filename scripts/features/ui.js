@@ -71,7 +71,7 @@ function banMenuSelect(player, selection) {
     for (const plr of World.getPlayers()) {
         let playerName = `${plr.name}`;
         if(plr === player) playerName += " §1[YOU]";
-        if(plr.hasTag("op")) playerName += " §c[OP]";
+        if(plr.hasTag("op")) playerName += " §1[OP]";
         banMenuSelect.button(playerName, playerIcons[Math.floor(Math.random() * playerIcons.length)]);
     }
 
@@ -222,7 +222,7 @@ export function playerSettingsMenuSelected(player, playerSelected) {
 
     const playerSettingsMenuSelected = new MinecraftUI.ActionFormData()
         .title("Player Menu - " + player.name)
-        .body(`Managing ${playerSelected.name}.\n\nPlayer Info:\nCoordinates: ${Math.floor(playerSelected.location.x)}, ${Math.floor(playerSelected.location.y)}, ${Math.floor(playerSelected.location.z)}\nDimension: ${(playerSelected.dimension.id).replace("minecraft:", "")}\nScythe Opped: ${playerSelected.hasTag("op")}\nMuted: ${playerSelected.hasTag("isMuted")}\nFrozen: ${playerSelected.hasTag("frozen")}\nVanished: ${playerSelected.hasTag("vanish")}\nFlying: ${playerSelected.hasTag("flying")}`)
+        .body(`Managing ${playerSelected.name}.\n\nPlayer Info:\nCoordinates: ${Math.floor(playerSelected.location.x)}, ${Math.floor(playerSelected.location.y)}, ${Math.floor(playerSelected.location.z)}\nDimension: ${(playerSelected.dimension.id).replace("minecraft:", "")}\nPulse Opped: ${playerSelected.hasTag("op")}\nMuted: ${playerSelected.hasTag("isMuted")}\nFrozen: ${playerSelected.hasTag("frozen")}\nVanished: ${playerSelected.hasTag("vanish")}\nFlying: ${playerSelected.hasTag("flying")}`)
         .button("Clear EnderChest", "textures/blocks/ender_chest_front.png")
         .button("Kick Player", "textures/ui/anvil_icon.png")
         .button("Ban Player", "textures/ui/anvil_icon.png");
@@ -299,7 +299,7 @@ export function playerSettingsMenuSelected(player, playerSelected) {
                 playerSettingsMenuSelected(player, playerSelected);
             }
         } else if(response.selection === 6) {
-            if(!config.customcommands.op.enabled) return player.tell("§r§6[§cPulse§6]§r Scythe-Opping players is disabled in config.js.");
+            if(!config.customcommands.op.enabled) return player.tell("§r§6[§cPulse§6]§r Pulse-Opping players is disabled in config.js.");
             if(playerSelected.hasTag("op")) {
                 playerSelected.removeTag("op");
                 player.runCommandAsync(`tellraw @a[tag=op] {"rawtext":[{"text":"§r§6[§cPulse§6]§r "},{"text":"${playerSelected.name} is no longer Pulse-Opped by ${player.name}."}]}`);
