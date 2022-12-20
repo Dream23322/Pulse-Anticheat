@@ -104,6 +104,7 @@ export function commandHandler(player, message) {
         else if(commandName === "mute") mute(message, args);
         else if(commandName === "unmute") unmute(message, args);
         else if(commandName === "invsee" ) invsee(message, args);
+        else if(commandName === "checkinfo") checkinfo(message);
         else if(commandName === "ecwipe") ecwipe(message, args);
         else if(commandName === "freeze") freeze(message, args);
         else if(commandName === "stats") stats(message, args);
@@ -111,9 +112,12 @@ export function commandHandler(player, message) {
         else if(commandName === "allowgma") allowgma(message);
         else if(commandName === "allowgmc") allowgmc(message);
         else if(commandName === "allowgms") allowgms(message);
+        else if(commandName === "antishulker") antishulker(message);
         else if(commandName === "bedrockvalidate") bedrockvalidate(message);
         else if(commandName === "modules") modules(message);
         else if(commandName === "npc") npc(message);
+        else if(commandName === "restart") restart(message);
+        else if(commandName === "testaura") testaura(message, args);
         else if(commandName === "invalidsprint") invalidsprint(message);
         else if(commandName === "overridecommandblocksenabled") overidecommandblocksenabled(message);
         else if(commandName === "removecommandblocks") removecommandblocks(message);
