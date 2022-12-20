@@ -84,6 +84,11 @@ export default
             "requiredTags": ["op"],
             "aliases": ["is"]
         },
+        "restart": {
+            "enabled": true,
+            "requiredTags": ["op"],
+            "aliases": ["restart", "reload"]            
+        },
         "ecwipe": {
             "enabled": true,
             "requiredTags": ["op"],
@@ -173,9 +178,9 @@ export default
             "enabled": true,
             "requiredTags": ["modstatus"]
         },
-        "spawn": {
+        "deop": {
             "enabled": true,
-            "requiredTags": []
+            "requiredTags": ["op"]
         }
     },
     "modules": {
