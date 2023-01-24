@@ -290,15 +290,6 @@ function checkPlayer() {
             player.tell(`X=${player.velocity.x}, Y=${player.velocity.y}, Z=${player.velocity.z}`);
         }
 
-        const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
-        const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
-
-        const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
-        if(isNotInAir === true) {
-            const lastYLocationOnGround = player.location.y
-            const lastLocationOnGround = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
-        }
-
         // BadPackets[6] = Checks for moving with no velocity
         if(config.modules.badpackets6.enabled) {
             if(config.modules.enabled && player.velocity.x === 0 && player.velocity.z === 0 && player.velocity.y === 0 && player.hasTag("moving")) {
@@ -322,7 +313,6 @@ function checkPlayer() {
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
 
             if(isNotInAir === false) flag(player, "Movement", "A", "Movement", "vertical_speed", Math.abs(player.velocity.y).toFixed(4), true);
-                else if(config.debug === true) console.warn(`${new Date()} | ${player.name} was detected with Movement/A motion but was found near solid blocks.`);
         }
 
         // Movement/C = Checks for the weird TP like speed movement
@@ -339,7 +329,7 @@ function checkPlayer() {
 
 
         //Fly/C = A Minecraft Java style fly check (ish)
-        if(config.modules.flyC.enabled && !player.hasTag("flying")) {
+        if(config.modules.flyC.enabled && !player.hasTag("flying") && !player.hasTag("op") ) {
             const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
             const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
             const velocity1 = Math.abs(player.velocity.x + player.velocity.y + player.velocity.z);
@@ -349,7 +339,7 @@ function checkPlayer() {
             const velocity5 = Math.abs((player.velocity.x + player.velocity.z) / 2);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(isNotInAir === false && velocity4 > config.modules.flyC.velocity && velocity5 > config.modules.flyC.hVelocity) {
-                flag(player, "Fly", "C", "Movement", "velocity", velocity4, true);
+                flag(player, "Fly", "C", "Movement", "velocity", velocity4, false);
             }
 
         }
@@ -371,13 +361,13 @@ function checkPlayer() {
 
         
         // Fly/B = Checks for vertical Fly
-        if(config.modules.flyB.enabled && !player.hasTag("flying")) {
+        if(config.modules.flyB.enabled && !player.hasTag("flying") && !player.hasTag("op")) {
             const pos1 = new Minecraft.BlockLocation(player.location.x, player.location.y + 2, player.location.z);
             const pos2 = new Minecraft.BlockLocation(player.location.x, player.location.y - 2, player.location.z);
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             const hVelocity = Math.abs((player.velocity.x + player.velocity.z) / 2);
             if(isNotInAir === false && player.velocity.y > config.modules.flyB.minVelocity && hVelocity < config.modules.flyB.MaxHVelocity && !player.hasTag("op") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-                flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(player.velocity.y), true);
+                flag(player, "Fly", "B", "Movement", "yVelocity", Math.abs(player.velocity.y), false);
             } 
         }
 
@@ -390,21 +380,35 @@ function checkPlayer() {
             const yVelocity = Math.abs(makeYVelocity1 / 2)
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(player.velocity.y > yVelocity && player.velocity.x > config.modules.flyD.Velocity && isNotInAir === false) {
-                flag(player, "Fly", "D", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), true);
+                flag(player, "Fly", "D", "Movement", "velocity", Math.abs(player.velocity.y).toFixed(4), false);
             }
         }
 
         // Fly/E = Checks for being in air but not falling
-        if(config.modules.flyE.enabled && !player.hasTag("flying")) {
+        if(config.modules.flyE.enabled && !player.hasTag("flying") && !player.hasTag("op")) {
             if(player.velocity.y === 0) {
                 const pos1 = new Minecraft.BlockLocation(player.location.x + 2, player.location.y + 2, player.location.z + 2);
                 const pos2 = new Minecraft.BlockLocation(player.location.x - 2, player.location.y - 1, player.location.z - 2);
                 const findHVelocity = Math.abs((player.velocity.x + player.velocity.z) / 2);
                 const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
                 if(isNotInAir === false && findHVelocity > config.modules.flyE.hVelocity) {
-                    flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocity.y).toFixed(4), true);
+                    flag(player, "Fly", "E", "Movement", "yVelocity", Math.abs(player.velocity.y).toFixed(4), false);
                 }          
             }
+        }
+
+        //Fly/F = Checks for being in the air and not falling
+        if(config.modules.flyF.enabled) {
+            let yPos1 = Minecraft.BlockLocation(player.location.y);
+            Minecraft.system.run(() => {
+                let yPos2 = Minecraft.BlockLocation(player.location.y);
+                if(yPos2 === yPos1) {
+                    const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
+                    if(isNotInAir === false) {         
+                        flag(player, "Fly", "F", "Movement", undefined, undefined, false);     
+                    }    
+                } 
+            }); 
         }
 
         /*/HighJump/a = Checks for jumping above 'config.modules.highjumpA.jumpHeight'
@@ -436,7 +440,7 @@ function checkPlayer() {
             const isNotInAir = pos1.blocksBetween(pos2).some((block) => player.dimension.getBlock(block).typeId !== "minecraft:air");
             if(isNotInAir === false && !player.getEffect(Minecraft.MinecraftEffectTypes.speed)) {
                 if(playerSpeed === 0.16 || playerSpeed === 0.17 || playerSpeed === 0.13 || playerSpeed > config.modules.flyA.speed) 
-                    flag(player, "Fly", "A", "Movement", "speed", playerSpeed, true);
+                    flag(player, "Fly", "A", "Movement", "speed", playerSpeed, false);
             }
         }
         
@@ -773,7 +777,7 @@ World.events.playerJoin.subscribe((playerJoin) => {
     if(config.modules.autoclickerA.enabled) player.firstAttack = Date.now();
     if(config.modules.fastuseA.enabled) player.lastThrow = Date.now();
     if(config.modules.autoclickerA.enabled) player.cps = 0;
-    if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
+    //if(config.modules.reachA.enabled || config.modules.movementC.enabled || config.modules.highjumpA.enabled) distance = 0;
     if(config.customcommands.report.enabled) player.reports = [];
     if(config.modules.killauraC.enabled) player.entitiesHit = [];
 
@@ -934,7 +938,7 @@ World.events.entityHit.subscribe((entityHit) => {
         if(config.modules.reachA.enabled === true) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-            if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
+            //if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
 
             if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
                 const checkGmc = World.getPlayers({
@@ -950,7 +954,7 @@ World.events.entityHit.subscribe((entityHit) => {
         if(config.modules.reachA.enabled === true && player.hasTag("reported")) {
             // get the difference between 2 three dimensional coordinates
             const distance = Math.sqrt(Math.pow(entity.location.x - player.location.x, 2) + Math.pow(entity.location.y - player.location.y, 2) + Math.pow(entity.location.z - player.location.z, 2));
-            if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
+            //if(config.debug === true) console.warn(`${player.name} attacked ${entity.nameTag || entity.typeId} with a distance of ${distance}`);
 
             if(distance > config.modules.reachA.reach && entity.typeId.startsWith("minecraft:") && !config.modules.reachA.entities_blacklist.includes(entity.typeId)) {
                 const checkGmc = World.getPlayers({
@@ -996,7 +1000,7 @@ World.events.entityHit.subscribe((entityHit) => {
         // Killaura/E = Checks for htiting invalid entities
         if(config.modules.killauraE.enabled) {
             if("minecraft:xp_orb".includes(entity.typeId) || "minecraft:arrow".includes(entity.typeId) || "minecraft:xp_bottle".includes(entity.typeId)) {
-                flag(player, "Killaura", "E", "Combat", "invalidEntity", entity.typeId, true);
+                flag(player, "Killaura", "E", "Combat", "invalidEntity", entity.typeId, false);
             }
         }
     }
