@@ -1,0 +1,1 @@
+tellraw @a[tag=notify] {\"rawtext\":[{\"text\":\"§r§6[§cPulse§6]§r \"},{\"selector\":\"@s\"},{\"text\":\" §1Was found near an §cMinecart Command Block §1which is a common entity for §cCBE Attacks\"}}]}",
