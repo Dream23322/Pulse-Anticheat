@@ -317,11 +317,14 @@ function checkPlayer() {
 
         // Movement/C = Checks for the weird TP like speed movement
         if(config.modules.movementC.enabled && !player.hasTag("flying") && !player.hasTag("jump") && !player.hasTag("gliding") && !player.hasTag("attacked") && !player.hasTag("riding") && !player.hasTag("levitating") && player.hasTag("moving")) {
-            const position1 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
+            let Xposition1 = new Minecraft.BlockLocation(player.location.x);
+            let Zposition1 = new Minecraft.BlockLocation(player.location.z);
             Minecraft.system.run(() => {
-                const position2 = new Minecraft.BlockLocation(player.location.x, player.location.y, player.location.z);
-                const distance = Math.sqrt(Math.abs(position1 - position2));
-                if(distance > config.modules.movementC.minDistance && distance < config.modules.movementC.maxDistance)
+                let Xposition2 = new Minecraft.BlockLocation(player.location.x);
+                let Zposition2 = new Minecraft.BlockLocation(player.location.z);
+                const Xdistance = Math.sqrt(Math.abs(Xposition1 - Xposition2));
+                const Zdistance = Math.sqrt(Math.abs(Zposition1 - Zposition2));
+                if(Xdistance > config.modules.movementC.minDistance && Xdistance < config.modules.movementC.maxDistance || Zdistance > config.modules.movementC.minDistance && Zdistance < config.modules.movementC.maxDistance)
                     flag(player, "movement", "C", "Movement", undefined, undefined, true);
             }); 
         }
