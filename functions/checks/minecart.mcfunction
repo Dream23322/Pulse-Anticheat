@@ -1,0 +1,1 @@
+execute @e[type=command_block_minecart] ~~~ execute @a[r=7] ~~~ function checks/alerts/minecartCommandBlock
