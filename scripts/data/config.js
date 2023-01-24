@@ -749,6 +749,11 @@ export default
             ],
             "checkForHighSpeed": true,
             "speed": 1.5
+        },
+        "flyF": {
+            "enabled": true,
+            "punishment": "kick",
+            "minVlbeforePunishment": 5
         }
     },
     "itemLists": {
