@@ -6,7 +6,12 @@
   <image src=https://user-images.githubusercontent.com/110651012/201456068-b35002c9-801b-4340-a6fb-d3bcd0b23a98.png border="0">
 </div>
 <div align="centre">
-  Website = https://pulse-anticheat.square.site/
+  THIS ANTICHEAT HAS BEEN DISCOUNTIED
+  I really just ran out of motivation to update it due to it not really being used on server
+  I have started a new anticheat called Isolate, it's currently public, but it might become private soon.
+  The new anticheat is kinda scuffed because its a scythe base again and USSR hasnt really been updating the anticheat so its a mess to fix.
+  Also doesnt help that ive taken a 7 month break from really making anticheats, I have been making a private java cpvp client but thats coded in java...
+  Anyways, this anticheat was fun to make, it was, was the best but minecraft keeps updating the API and destorying everything for developers.
   </div>
 
 # Info
